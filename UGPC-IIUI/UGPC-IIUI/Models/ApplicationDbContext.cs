@@ -11,7 +11,6 @@ namespace UGPC_IIUI.Models
     {
         public DbSet<Student> Students { get; set; }
         public DbSet<Professor> Professors { get; set; }
-        public DbSet<Department> Departments { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

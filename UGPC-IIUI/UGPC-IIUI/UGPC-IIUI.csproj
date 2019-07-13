@@ -217,10 +217,21 @@
     <Compile Include="Migrations\201907131008330_changeindepartmentrequired.Designer.cs">
       <DependentUpon>201907131008330_changeindepartmentrequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907131443159_addPasswordToStudent.cs" />
+    <Compile Include="Migrations\201907131443159_addPasswordToStudent.Designer.cs">
+      <DependentUpon>201907131443159_addPasswordToStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907131455148_updatestudentpasswordtable.cs" />
+    <Compile Include="Migrations\201907131455148_updatestudentpasswordtable.Designer.cs">
+      <DependentUpon>201907131455148_updatestudentpasswordtable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907131601446_deleteDepartmentClass.cs" />
+    <Compile Include="Migrations\201907131601446_deleteDepartmentClass.Designer.cs">
+      <DependentUpon>201907131601446_deleteDepartmentClass.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
@@ -262,8 +273,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -340,6 +349,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907131008330_changeindepartmentrequired.resx">
       <DependentUpon>201907131008330_changeindepartmentrequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907131443159_addPasswordToStudent.resx">
+      <DependentUpon>201907131443159_addPasswordToStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907131455148_updatestudentpasswordtable.resx">
+      <DependentUpon>201907131455148_updatestudentpasswordtable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907131601446_deleteDepartmentClass.resx">
+      <DependentUpon>201907131601446_deleteDepartmentClass.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,8 +17,7 @@ namespace UGPC_IIUI.Controllers
         // GET: Students
         public ActionResult Index()
         {
-            var students = db.Students.Include(s => s.Department);
-            return View(students.ToList());
+            return View(db.Students.ToList());
         }
 
         // GET: Students/Details/5
@@ -39,7 +38,6 @@ namespace UGPC_IIUI.Controllers
         // GET: Students/Create
         public ActionResult Create()
         {
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name");
             return View();
         }
 
@@ -48,7 +46,7 @@ namespace UGPC_IIUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StudentID,Name,RegNo,Batch,Section,DepartmentID")] Student student)
+        public ActionResult Create([Bind(Include = "StudentID,Name,RegNo,Batch,Section,Department,Password")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +55,6 @@ namespace UGPC_IIUI.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
             return View(student);
         }
 
@@ -73,7 +70,6 @@ namespace UGPC_IIUI.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
             return View(student);
         }
 
@@ -82,7 +78,7 @@ namespace UGPC_IIUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StudentID,Name,RegNo,Batch,Section,DepartmentID")] Student student)
+        public ActionResult Edit([Bind(Include = "StudentID,Name,RegNo,Batch,Section,Department,Password")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +86,6 @@ namespace UGPC_IIUI.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
             return View(student);
         }
 

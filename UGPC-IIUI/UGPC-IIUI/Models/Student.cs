@@ -19,8 +19,19 @@ namespace UGPC_IIUI.Models
         [Required]
         public string Section { get; set; }
 
+        [Display (Name = "Department")]
         public Department Department { get; set; }
-        public int DepartmentID { get; set; }
+        
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
     }
 
+    public enum Department
+    {
+        CS,
+        SE,
+        IT
+
+    }
 }
