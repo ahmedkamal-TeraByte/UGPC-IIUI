@@ -176,8 +176,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ProfessorsController.cs" />
-    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -185,56 +183,12 @@
     <Compile Include="Migrations\201907130550143_InitialModel.Designer.cs">
       <DependentUpon>201907130550143_InitialModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201907130559263_AddProfessorandStudent.cs" />
-    <Compile Include="Migrations\201907130559263_AddProfessorandStudent.Designer.cs">
-      <DependentUpon>201907130559263_AddProfessorandStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130618385_addDepartmentandSectionToStudent.cs" />
-    <Compile Include="Migrations\201907130618385_addDepartmentandSectionToStudent.Designer.cs">
-      <DependentUpon>201907130618385_addDepartmentandSectionToStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130619502_addDepartmentTable.cs" />
-    <Compile Include="Migrations\201907130619502_addDepartmentTable.Designer.cs">
-      <DependentUpon>201907130619502_addDepartmentTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130625565_addDepartmenttoStudents.cs" />
-    <Compile Include="Migrations\201907130625565_addDepartmenttoStudents.Designer.cs">
-      <DependentUpon>201907130625565_addDepartmenttoStudents.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130650467_PopulateDepartments.cs" />
-    <Compile Include="Migrations\201907130650467_PopulateDepartments.Designer.cs">
-      <DependentUpon>201907130650467_PopulateDepartments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130739503_addDepartmentDisplayName.cs" />
-    <Compile Include="Migrations\201907130739503_addDepartmentDisplayName.Designer.cs">
-      <DependentUpon>201907130739503_addDepartmentDisplayName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907130948468_addRequiredtoStudent.cs" />
-    <Compile Include="Migrations\201907130948468_addRequiredtoStudent.Designer.cs">
-      <DependentUpon>201907130948468_addRequiredtoStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907131008330_changeindepartmentrequired.cs" />
-    <Compile Include="Migrations\201907131008330_changeindepartmentrequired.Designer.cs">
-      <DependentUpon>201907131008330_changeindepartmentrequired.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907131443159_addPasswordToStudent.cs" />
-    <Compile Include="Migrations\201907131443159_addPasswordToStudent.Designer.cs">
-      <DependentUpon>201907131443159_addPasswordToStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907131455148_updatestudentpasswordtable.cs" />
-    <Compile Include="Migrations\201907131455148_updatestudentpasswordtable.Designer.cs">
-      <DependentUpon>201907131455148_updatestudentpasswordtable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907131601446_deleteDepartmentClass.cs" />
-    <Compile Include="Migrations\201907131601446_deleteDepartmentClass.Designer.cs">
-      <DependentUpon>201907131601446_deleteDepartmentClass.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Professor.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -295,16 +249,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
-    <Content Include="Views\Professors\Create.cshtml" />
-    <Content Include="Views\Professors\Delete.cshtml" />
-    <Content Include="Views\Professors\Details.cshtml" />
-    <Content Include="Views\Professors\Edit.cshtml" />
-    <Content Include="Views\Professors\Index.cshtml" />
-    <Content Include="Views\Students\Create.cshtml" />
-    <Content Include="Views\Students\Delete.cshtml" />
-    <Content Include="Views\Students\Details.cshtml" />
-    <Content Include="Views\Students\Edit.cshtml" />
-    <Content Include="Views\Students\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -325,39 +269,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907130550143_InitialModel.resx">
       <DependentUpon>201907130550143_InitialModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130559263_AddProfessorandStudent.resx">
-      <DependentUpon>201907130559263_AddProfessorandStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130618385_addDepartmentandSectionToStudent.resx">
-      <DependentUpon>201907130618385_addDepartmentandSectionToStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130619502_addDepartmentTable.resx">
-      <DependentUpon>201907130619502_addDepartmentTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130625565_addDepartmenttoStudents.resx">
-      <DependentUpon>201907130625565_addDepartmenttoStudents.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130650467_PopulateDepartments.resx">
-      <DependentUpon>201907130650467_PopulateDepartments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130739503_addDepartmentDisplayName.resx">
-      <DependentUpon>201907130739503_addDepartmentDisplayName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907130948468_addRequiredtoStudent.resx">
-      <DependentUpon>201907130948468_addRequiredtoStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907131008330_changeindepartmentrequired.resx">
-      <DependentUpon>201907131008330_changeindepartmentrequired.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907131443159_addPasswordToStudent.resx">
-      <DependentUpon>201907131443159_addPasswordToStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907131455148_updatestudentpasswordtable.resx">
-      <DependentUpon>201907131455148_updatestudentpasswordtable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907131601446_deleteDepartmentClass.resx">
-      <DependentUpon>201907131601446_deleteDepartmentClass.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
