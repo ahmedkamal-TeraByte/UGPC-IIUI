@@ -19,12 +19,7 @@ namespace UGPC_IIUI.Models
         [Required]
         public string Section { get; set; }
 
-        [Display(Name = "Department")]
-        public Department Department { get; set; }
-
-        [Required]
-        [Display(Name = "Department")]
-        public int DepartmentId { get; set; }
+        
 
     }
 }

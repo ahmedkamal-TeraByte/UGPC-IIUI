@@ -1,8 +1,8 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace UGPC_IIUI.Models
 {
@@ -16,5 +16,15 @@ namespace UGPC_IIUI.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        [Display(Name = "Department")]
+        public Department Department { get; set; }
+
+        [Required]
+        [Display(Name = "Department")]
+        public int DepartmentId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
     }
 }

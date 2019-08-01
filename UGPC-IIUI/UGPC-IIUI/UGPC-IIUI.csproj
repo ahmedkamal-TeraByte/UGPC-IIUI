@@ -183,12 +183,25 @@
     <Compile Include="Migrations\201907130550143_InitialModel.Designer.cs">
       <DependentUpon>201907130550143_InitialModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908010721461_addTablesInDatabase.cs" />
+    <Compile Include="Migrations\201908010721461_addTablesInDatabase.Designer.cs">
+      <DependentUpon>201908010721461_addTablesInDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908010723223_moveDepartmentPropertyToIdentityModel.cs" />
+    <Compile Include="Migrations\201908010723223_moveDepartmentPropertyToIdentityModel.Designer.cs">
+      <DependentUpon>201908010723223_moveDepartmentPropertyToIdentityModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908010731132_updateDatabasechanges.cs" />
+    <Compile Include="Migrations\201908010731132_updateDatabasechanges.Designer.cs">
+      <DependentUpon>201908010731132_updateDatabasechanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Professor.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -269,6 +282,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907130550143_InitialModel.resx">
       <DependentUpon>201907130550143_InitialModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010721461_addTablesInDatabase.resx">
+      <DependentUpon>201908010721461_addTablesInDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010723223_moveDepartmentPropertyToIdentityModel.resx">
+      <DependentUpon>201908010723223_moveDepartmentPropertyToIdentityModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010731132_updateDatabasechanges.resx">
+      <DependentUpon>201908010731132_updateDatabasechanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
