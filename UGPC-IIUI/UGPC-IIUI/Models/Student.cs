@@ -8,8 +8,6 @@ namespace UGPC_IIUI.Models
 
 
         [Required]
-        public string Name { get; set; }
-
         [Display(Name = "Registration Number")]
         public int RegNo { get; set; }
 
@@ -18,8 +16,5 @@ namespace UGPC_IIUI.Models
 
         [Required]
         public string Section { get; set; }
-
-        
-
     }
 }

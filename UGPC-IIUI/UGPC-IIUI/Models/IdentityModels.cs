@@ -17,14 +17,27 @@ namespace UGPC_IIUI.Models
             return userIdentity;
         }
 
-        [Display(Name = "Department")]
-        public Department Department { get; set; }
+
+        
 
         [Required]
         [Display(Name = "Department")]
         public int DepartmentId { get; set; }
+        public Department Department { get; set; }
 
         [Required]
         public string Name { get; set; }
+
+
+        public int? StudentId { get; set; }
+        public Student Student { get; set; }
+
+
+        public int? ProfessorId { get; set; }
+
+        public Professor Professor { get; set; }
+
+
+
     }
 }

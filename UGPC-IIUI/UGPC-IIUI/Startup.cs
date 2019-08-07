@@ -12,7 +12,7 @@ namespace UGPC_IIUI
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            CreateRolesAndUsers();
+            //CreateRolesAndUsers();
         }
 
         private void CreateRolesAndUsers()
@@ -27,29 +27,29 @@ namespace UGPC_IIUI
             if (!roleManager.RoleExists("Admin"))
             {
 
-                // first we create Admin rool   
+                // first we create Admin role  
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "Admin";
                 roleManager.Create(role);
 
                 //to create a default admin user
                 {
-                    //Here we create a Admin super user who will maintain the website                  
-
-                    //                var user = new ApplicationUser();
-                    //                user.UserName = "shanu";
-                    //                user.Email = "syedshanumcain@gmail.com";
+                    //                    //Here we create a Admin super user who will maintain the website                  
                     //
-                    //                string userPWD = "A@Z200711";
-                    //
-                    //                var chkUser = userManager.Create(user, userPWD);
-                    //
-                    //                //Add default User to Role Admin   
-                    //                if (chkUser.Succeeded)
-                    //                {
-                    //                    var result1 = userManager.AddToRole(user.Id, "Admin");
-                    //
-                    //                }
+                    //                    var user = new ApplicationUser();
+                    //                    user.UserName = "admin123";
+                    //                    user.Email = "admin123@ugpc.com";
+                    //                    
+                    //                    string userPWD = "Helloworld!23";
+                    //                    
+                    //                    var chkUser = userManager.Create(user, userPWD);
+                    //                    
+                    //                    //Add default User to Role Admin   
+                    //                    if (chkUser.Succeeded)
+                    //                    {
+                    //                        var result1 = userManager.AddToRole(user.Id, "Admin");
+                    //                    
+                    //                    }
                 }
             }
 

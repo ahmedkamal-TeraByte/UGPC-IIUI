@@ -1,5 +1,5 @@
-﻿using System.Data.Entity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace UGPC_IIUI.Models
 {
@@ -7,8 +7,10 @@ namespace UGPC_IIUI.Models
     {
         public DbSet<Student> Students { get; set; }
         public DbSet<Department> Departments { get; set; }
-
         public DbSet<Professor> Professors { get; set; }
+        public DbSet<Committee> Committees { get; set; }
+
+        public DbSet<CommitteeMember> CommitteeMembers { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

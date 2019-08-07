@@ -174,8 +174,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -195,13 +197,29 @@
     <Compile Include="Migrations\201908010731132_updateDatabasechanges.Designer.cs">
       <DependentUpon>201908010731132_updateDatabasechanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908051925276_addingTeacherAndProfessorToIdentityModel.cs" />
+    <Compile Include="Migrations\201908051925276_addingTeacherAndProfessorToIdentityModel.Designer.cs">
+      <DependentUpon>201908051925276_addingTeacherAndProfessorToIdentityModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908052018293_removeNameFromStudent.cs" />
+    <Compile Include="Migrations\201908052018293_removeNameFromStudent.Designer.cs">
+      <DependentUpon>201908052018293_removeNameFromStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908072004162_addCommitteeAndCommitteeMembers.cs" />
+    <Compile Include="Migrations\201908072004162_addCommitteeAndCommitteeMembers.Designer.cs">
+      <DependentUpon>201908072004162_addCommitteeAndCommitteeMembers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Committee.cs" />
+    <Compile Include="Models\CommitteeMember.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
+    <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -262,6 +280,18 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
+    <Content Include="Views\Departments\Create.cshtml" />
+    <Content Include="Views\Departments\Delete.cshtml" />
+    <Content Include="Views\Departments\Details.cshtml" />
+    <Content Include="Views\Departments\Edit.cshtml" />
+    <Content Include="Views\Departments\Index.cshtml" />
+    <Content Include="Views\Professors\ProfessorForm.cshtml" />
+    <Content Include="Views\Professors\Delete.cshtml" />
+    <Content Include="Views\Professors\Details.cshtml" />
+    <Content Include="Views\Professors\Edit.cshtml" />
+    <Content Include="Views\Professors\Index.cshtml" />
+    <Content Include="Views\Shared\_StudentNavBar.cshtml" />
+    <Content Include="Views\Professors\NewProfessorForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -291,6 +321,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908010731132_updateDatabasechanges.resx">
       <DependentUpon>201908010731132_updateDatabasechanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908051925276_addingTeacherAndProfessorToIdentityModel.resx">
+      <DependentUpon>201908051925276_addingTeacherAndProfessorToIdentityModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908052018293_removeNameFromStudent.resx">
+      <DependentUpon>201908052018293_removeNameFromStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908072004162_addCommitteeAndCommitteeMembers.resx">
+      <DependentUpon>201908072004162_addCommitteeAndCommitteeMembers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

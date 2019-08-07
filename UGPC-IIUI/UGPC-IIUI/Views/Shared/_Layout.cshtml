@@ -9,7 +9,15 @@
 
 </head>
 <body>
-@Html.Partial("_NavBar")
+@if (User.IsInRole("Student"))
+{
+    @Html.Partial("_StudentNavBar")
+}
+else
+{
+    @Html.Partial("_NavBar")
+}
+ 
 <div class="container body-content">
     @RenderBody()
     <hr/>
