@@ -1,0 +1,59 @@
+﻿@using WebGrease.Css.Extensions
+@model UGPC_IIUI.ViewModels.CommitteeViewModel  
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>@Model.Committee.Name</h4>
+    <hr />
+    
+    @Html.ActionLink("Add Members","Index", null, new {@class="btn btn-primary align-right"})
+    
+    <table class=" table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th><b>Professor Name</b></th>
+            <th><b>Role in Committee</b></th>
+            <th><b>Delete</b></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @{
+            if (Model.CommitteeMembers == null)
+            {
+                <p>No Items Found</p>
+            }
+            else
+            {
+
+                foreach (var p in Model.CommitteeMembers)
+                {
+                    <tr>
+                        <td>
+                            @p.Key.Name
+                        </td>
+
+                        <td>
+                            @p.Value
+                        </td>
+                        
+                        <td>
+                            @Html.ActionLink("Edit","EditMember", new {id= p.Key.ProfessorId})
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        </tbody>
+    </table>
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Committee.CommitteeId}) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

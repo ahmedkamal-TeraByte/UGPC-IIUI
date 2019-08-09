@@ -70,6 +70,24 @@ namespace UGPC_IIUI
                 roleManager.Create(role);
 
             }
+
+            //creating committee incharge role
+            if (!roleManager.RoleExists("Committee Incharge"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Committee Incharge";
+                roleManager.Create(role);
+
+            }
+
+            //creating committee member role
+            if (!roleManager.RoleExists("Committee Member"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Committee Member";
+                roleManager.Create(role);
+
+            }
         }
 
     }
