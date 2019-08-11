@@ -1,0 +1,45 @@
+﻿@model UGPC_IIUI.ViewModels.CommitteeMemberViewModel
+
+@{
+    ViewBag.Title = "Add New Member";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using(Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        
+        <div class=" form-group">
+            @Html.HiddenFor(m => m.CommitteeId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MemberId, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.MemberId, new SelectList(ViewBag.MembersList, "Id", "Name"), new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Role, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Role, new SelectList(ViewBag.Roles, "Value", "Text"), new { @class = "form-control" })
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default"/>
+            </div>
+        </div>
+
+    </div>
+
+}
+

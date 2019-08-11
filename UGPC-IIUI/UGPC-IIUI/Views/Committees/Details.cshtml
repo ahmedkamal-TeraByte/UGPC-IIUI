@@ -5,19 +5,23 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@* <h2>Details</h2> *@
 
 <div>
-    <h4>@Model.Committee.Name</h4>
+    <h2>@Model.Committee.Name</h2>
     <hr />
     
-    @Html.ActionLink("Add Members","Index", null, new {@class="btn btn-primary align-right"})
+    @Html.ActionLink("Add Members","AddNewMember", new {committeeId=Model.Committee.CommitteeId}, new {@class="btn btn-primary align-right"})
     
+    <div>
+        <br />
+    </div>
     <table class=" table table-bordered table-hover">
         <thead>
         <tr>
             <th><b>Professor Name</b></th>
             <th><b>Role in Committee</b></th>
+            <th><b>Edit</b></th>
             <th><b>Delete</b></th>
         </tr>
         </thead>
@@ -44,6 +48,10 @@
                         
                         <td>
                             @Html.ActionLink("Edit","EditMember", new {id= p.Key.ProfessorId})
+                        </td>
+                        
+                        <td>
+                            @Html.ActionLink("Delete","DeleteMember", new {id= p.Key.ProfessorId})
                         </td>
                     </tr>
                 }

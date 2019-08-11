@@ -13,5 +13,6 @@ namespace UGPC_IIUI.ViewModels
         public ApplicationUser Member { get; set; }
 
         public string Role { get; set; }
+        public int committeeId { get; set; }
     }
 }

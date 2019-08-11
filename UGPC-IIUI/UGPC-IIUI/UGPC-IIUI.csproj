@@ -222,6 +222,10 @@
     <Compile Include="Migrations\201908081811376_addTableCommitteeMember.Designer.cs">
       <DependentUpon>201908081811376_addTableCommitteeMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908100530339_changeProfessorToUserInCommitteeMember.cs" />
+    <Compile Include="Migrations\201908100530339_changeProfessorToUserInCommitteeMember.Designer.cs">
+      <DependentUpon>201908100530339_changeProfessorToUserInCommitteeMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
@@ -229,6 +233,7 @@
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\CommitteeMemberViewModel.cs" />
     <Compile Include="ViewModels\CommitteeViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
@@ -312,6 +317,8 @@
     <Content Include="Views\Committees\Edit.cshtml" />
     <Content Include="Views\Committees\Index.cshtml" />
     <Content Include="Views\Committees\EditMember.cshtml" />
+    <Content Include="Views\Committees\AddNewMember.cshtml" />
+    <Content Include="Views\Committees\DeleteMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -359,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908081811376_addTableCommitteeMember.resx">
       <DependentUpon>201908081811376_addTableCommitteeMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908100530339_changeProfessorToUserInCommitteeMember.resx">
+      <DependentUpon>201908100530339_changeProfessorToUserInCommitteeMember.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -14,7 +14,7 @@ namespace UGPC_IIUI.Models
         [Key]
         [Column(Order = 2)]
 
-        public int ProfessorId { get; set; }
-        public Professor Professor { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }
