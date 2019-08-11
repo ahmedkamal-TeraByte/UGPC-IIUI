@@ -13,7 +13,7 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ProfessorsController : Controller
 
 

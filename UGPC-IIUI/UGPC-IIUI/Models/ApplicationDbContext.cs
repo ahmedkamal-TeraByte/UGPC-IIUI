@@ -10,6 +10,10 @@ namespace UGPC_IIUI.Models
         public DbSet<Professor> Professors { get; set; }
         public DbSet<Committee> Committees { get; set; }
 
+        public DbSet<Group> Groups { get; set; }
+
+        public DbSet<GroupMember> GroupMembers { get; set; }
+
         public DbSet<CommitteeMember> CommitteeMembers { get; set; }
 
         public ApplicationDbContext()

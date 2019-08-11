@@ -13,7 +13,6 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class CommitteesController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
@@ -27,12 +26,15 @@ namespace UGPC_IIUI.Controllers
         }
 
         // GET: Committees
+
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View(_context.Committees.ToList());
         }
 
         // GET: Committees/Details/5
+        [Authorize(Roles = "Admin,Supervisor")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -82,6 +84,8 @@ namespace UGPC_IIUI.Controllers
         }
 
         // GET: Committees/Create
+
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -90,6 +94,7 @@ namespace UGPC_IIUI.Controllers
         // POST: Committees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CommitteeId,Name")] Committee committee)
@@ -104,6 +109,7 @@ namespace UGPC_IIUI.Controllers
             return View(committee);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Committees/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -124,6 +130,8 @@ namespace UGPC_IIUI.Controllers
         // POST: Committees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CommitteeId,Name")] Committee committee)
@@ -138,7 +146,9 @@ namespace UGPC_IIUI.Controllers
             return View(committee);
         }
 
+
         // GET: Committees/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -155,7 +165,10 @@ namespace UGPC_IIUI.Controllers
             return View(committee);
         }
 
+
+
         // POST: Committees/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -176,6 +189,8 @@ namespace UGPC_IIUI.Controllers
             base.Dispose(disposing);
         }
 
+
+        [Authorize(Roles = "Admin,Committee Incharge")]
         public ActionResult EditMember(string id)
         {
             var profId = Convert.ToInt32(id);
@@ -214,6 +229,7 @@ namespace UGPC_IIUI.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, Committee Incharge")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditMember(CommitteeViewModel viewModel)
@@ -247,6 +263,8 @@ namespace UGPC_IIUI.Controllers
 
         }
 
+
+        [Authorize(Roles = "Admin, Committee Incharge")]
         public ActionResult AddNewMember(int committeeId)
         {
             var users = _context.Users.Where(u => u.ProfessorId != null & u.StudentId == null).ToList();
@@ -289,6 +307,7 @@ namespace UGPC_IIUI.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, Committee Incharge")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewMember(CommitteeMemberViewModel viewModel)
@@ -308,6 +327,8 @@ namespace UGPC_IIUI.Controllers
                  return HttpNotFound("Can't add new Role");
         }
 
+
+        [Authorize(Roles = "Admin, Committee Incharge")]
         public ActionResult DeleteMember(int? id)
         {
             var user = _context.Users.Single(u => u.ProfessorId == id);
@@ -331,6 +352,8 @@ namespace UGPC_IIUI.Controllers
             return View(viewModel);
         }
 
+
+        [Authorize(Roles = "Admin, Committee Incharge")]
         [HttpPost, ActionName("DeleteMember")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteMemberConfirmed(CommitteeMemberViewModel viewModel)
@@ -348,6 +371,15 @@ namespace UGPC_IIUI.Controllers
                 return HttpNotFound("Membership Not Found");
 //            return Content(id.ToString());
             return RedirectToAction("Details",new {id=viewModel.CommitteeId});
+        }
+
+
+        [Authorize(Roles = "Supervisor")]
+        public ActionResult MyIndex()
+        {
+            var userId = User.Identity.GetUserId();
+            var committeeId = (_context.CommitteeMembers.Single(m => m.UserId == userId)).CommitteeId;
+            return View(_context.Committees.Where(c=> c.CommitteeId==committeeId).ToList());
         }
     }
 }

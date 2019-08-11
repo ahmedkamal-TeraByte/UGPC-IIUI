@@ -11,8 +11,11 @@
     <h2>@Model.Committee.Name</h2>
     <hr />
     
-    @Html.ActionLink("Add Members","AddNewMember", new {committeeId=Model.Committee.CommitteeId}, new {@class="btn btn-primary align-right"})
-    
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+    { 
+        @Html.ActionLink("Add Members","AddNewMember", new {committeeId=Model.Committee.CommitteeId}, new {@class="btn btn-primary "})
+    }
     <div>
         <br />
     </div>
@@ -21,8 +24,11 @@
         <tr>
             <th><b>Professor Name</b></th>
             <th><b>Role in Committee</b></th>
-            <th><b>Edit</b></th>
-            <th><b>Delete</b></th>
+            @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+            {
+                <th><b>Edit</b></th>
+                <th><b>Delete</b></th>
+            }
         </tr>
         </thead>
         
@@ -45,14 +51,16 @@
                         <td>
                             @p.Value
                         </td>
-                        
-                        <td>
-                            @Html.ActionLink("Edit","EditMember", new {id= p.Key.ProfessorId})
-                        </td>
-                        
-                        <td>
-                            @Html.ActionLink("Delete","DeleteMember", new {id= p.Key.ProfessorId})
-                        </td>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+                        {
+                            <td>
+                                @Html.ActionLink("Edit", "EditMember", new {id = p.Key.ProfessorId})
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteMember", new {id = p.Key.ProfessorId})
+                            </td>
+                        }
                     </tr>
                 }
             }
@@ -62,6 +70,9 @@
 
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Committee.CommitteeId}) |
-    @Html.ActionLink("Back to List", "Index")
+    @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+    {
+        @Html.ActionLink("Edit", "Edit", new {id = Model.Committee.CommitteeId}) 
+    }
+    | @Html.ActionLink("Back to List", "Index")
 </p>

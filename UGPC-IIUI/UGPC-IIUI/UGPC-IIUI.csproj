@@ -226,9 +226,19 @@
     <Compile Include="Migrations\201908100530339_changeProfessorToUserInCommitteeMember.Designer.cs">
       <DependentUpon>201908100530339_changeProfessorToUserInCommitteeMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908110933404_addGroupAndGroupMember.cs" />
+    <Compile Include="Migrations\201908110933404_addGroupAndGroupMember.Designer.cs">
+      <DependentUpon>201908110933404_addGroupAndGroupMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908110939368_changeNamesinGroupMember.cs" />
+    <Compile Include="Migrations\201908110939368_changeNamesinGroupMember.Designer.cs">
+      <DependentUpon>201908110939368_changeNamesinGroupMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupMember.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
@@ -309,7 +319,7 @@
     <Content Include="Views\Professors\Details.cshtml" />
     <Content Include="Views\Professors\Edit.cshtml" />
     <Content Include="Views\Professors\Index.cshtml" />
-    <Content Include="Views\Shared\_StudentNavBar.cshtml" />
+    <Content Include="Views\Shared\_ProfessorNavBar.cshtml" />
     <Content Include="Views\Professors\NewProfessorForm.cshtml" />
     <Content Include="Views\Committees\Create.cshtml" />
     <Content Include="Views\Committees\Delete.cshtml" />
@@ -319,6 +329,8 @@
     <Content Include="Views\Committees\EditMember.cshtml" />
     <Content Include="Views\Committees\AddNewMember.cshtml" />
     <Content Include="Views\Committees\DeleteMember.cshtml" />
+    <Content Include="Views\Shared\_StudentNavBar.cshtml" />
+    <Content Include="Views\Committees\MyIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -369,6 +381,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908100530339_changeProfessorToUserInCommitteeMember.resx">
       <DependentUpon>201908100530339_changeProfessorToUserInCommitteeMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908110933404_addGroupAndGroupMember.resx">
+      <DependentUpon>201908110933404_addGroupAndGroupMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908110939368_changeNamesinGroupMember.resx">
+      <DependentUpon>201908110939368_changeNamesinGroupMember.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
