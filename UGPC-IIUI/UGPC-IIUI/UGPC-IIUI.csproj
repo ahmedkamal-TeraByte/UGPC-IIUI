@@ -176,6 +176,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommitteesController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
+    <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
@@ -234,17 +235,25 @@
     <Compile Include="Migrations\201908110939368_changeNamesinGroupMember.Designer.cs">
       <DependentUpon>201908110939368_changeNamesinGroupMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908111130523_removeGroupMemberClass.cs" />
+    <Compile Include="Migrations\201908111130523_removeGroupMemberClass.Designer.cs">
+      <DependentUpon>201908111130523_removeGroupMemberClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908111946088_addJoinedToUserTable.cs" />
+    <Compile Include="Migrations\201908111946088_addJoinedToUserTable.Designer.cs">
+      <DependentUpon>201908111946088_addJoinedToUserTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
     <Compile Include="Models\Group.cs" />
-    <Compile Include="Models\GroupMember.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="ViewModels\CommitteeMemberViewModel.cs" />
     <Compile Include="ViewModels\CommitteeViewModel.cs" />
+    <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
@@ -331,6 +340,9 @@
     <Content Include="Views\Committees\DeleteMember.cshtml" />
     <Content Include="Views\Shared\_StudentNavBar.cshtml" />
     <Content Include="Views\Committees\MyIndex.cshtml" />
+    <Content Include="Views\Groups\Index.cshtml" />
+    <Content Include="Views\Groups\Create.cshtml" />
+    <Content Include="Views\Groups\test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -387,6 +399,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908110939368_changeNamesinGroupMember.resx">
       <DependentUpon>201908110939368_changeNamesinGroupMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908111130523_removeGroupMemberClass.resx">
+      <DependentUpon>201908111130523_removeGroupMemberClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908111946088_addJoinedToUserTable.resx">
+      <DependentUpon>201908111946088_addJoinedToUserTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

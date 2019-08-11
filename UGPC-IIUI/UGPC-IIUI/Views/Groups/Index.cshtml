@@ -1,0 +1,61 @@
+﻿@model IEnumerable<UGPC_IIUI.Models.Group>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create New Group", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+}
+
+@if (!Model.Any() && !User.IsInRole("Admin"))
+{
+
+    <p>
+        @Html.ActionLink("Create New Group", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+
+    <p>You're Not a Member of Any Group.<br /><b> Create a New Group </b><br /><br />Or <b>Ask a friend </b>to add you in his group!</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student1Id)
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student2Id)
+
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student1.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student2.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+}

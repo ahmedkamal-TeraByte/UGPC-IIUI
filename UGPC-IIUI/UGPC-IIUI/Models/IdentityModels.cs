@@ -37,6 +37,8 @@ namespace UGPC_IIUI.Models
 
         public Professor Professor { get; set; }
 
+        public bool Joined { get; set; }
+
 
 
     }
