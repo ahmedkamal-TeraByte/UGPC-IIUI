@@ -25,9 +25,9 @@ else
 {
     <table class="table">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.Id) *@
+            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Student1Id)
 
@@ -41,19 +41,23 @@ else
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
+                @* <td> *@
+                @*     @Html.DisplayFor(modelItem => item.Id) *@
+                @* </td> *@
+                
+                @Html.HiddenFor(m=> item.Id)
                 <td>
                     @Html.DisplayFor(modelItem => item.Student1.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Student2.Name)
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                    </td>
+                }
             </tr>
         }
 

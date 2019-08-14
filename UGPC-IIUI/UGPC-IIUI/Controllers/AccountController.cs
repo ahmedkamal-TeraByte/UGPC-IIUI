@@ -183,6 +183,7 @@ namespace UGPC_IIUI.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
+
             }
             var departments = _context.Departments.ToList();
 

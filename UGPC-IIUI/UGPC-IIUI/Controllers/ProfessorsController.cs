@@ -213,7 +213,7 @@ namespace UGPC_IIUI.Controllers
                 return RedirectToAction("Index");
             }
 
-            HttpNotFound("MODEL STATE IS NOT VALID");
+            //            HttpNotFound("MODEL STATE IS NOT VALID");
             List<SelectListItem> list = new List<SelectListItem>();
             var roles = _context.Roles.Where(u => !u.Name.Contains("Student")).ToList();
 
@@ -227,31 +227,6 @@ namespace UGPC_IIUI.Controllers
             return View("ProfessorForm", viewModel);
         }
 
-        // GET: Professors/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Professor professor = _context.Professors.Find(id);
-            if (professor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(professor);
-        }
-
-        // POST: Professors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Professor professor = _context.Professors.Find(id);
-            _context.Professors.Remove(professor);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {

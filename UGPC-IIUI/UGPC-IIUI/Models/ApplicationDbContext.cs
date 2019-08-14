@@ -9,8 +9,9 @@ namespace UGPC_IIUI.Models
         public DbSet<Department> Departments { get; set; }
         public DbSet<Professor> Professors { get; set; }
         public DbSet<Committee> Committees { get; set; }
-
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectFile> ProjectFiles { get; set; }
 
         public DbSet<CommitteeMember> CommitteeMembers { get; set; }
 

@@ -37,7 +37,7 @@ namespace UGPC_IIUI.ViewModels
 
 
         [Required]
-        [Display(Name = "Role Name")]
+        [Display(Name = "Role")]
         public string Role { get; set; }
 
 

@@ -180,6 +180,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -243,10 +245,16 @@
     <Compile Include="Migrations\201908111946088_addJoinedToUserTable.Designer.cs">
       <DependentUpon>201908111946088_addJoinedToUserTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908141551449_addProjectAndProjectFileTablesToDb.cs" />
+    <Compile Include="Migrations\201908141551449_addProjectAndProjectFileTablesToDb.Designer.cs">
+      <DependentUpon>201908141551449_addProjectAndProjectFileTablesToDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectFile.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
@@ -324,7 +332,6 @@
     <Content Include="Views\Departments\Edit.cshtml" />
     <Content Include="Views\Departments\Index.cshtml" />
     <Content Include="Views\Professors\ProfessorForm.cshtml" />
-    <Content Include="Views\Professors\Delete.cshtml" />
     <Content Include="Views\Professors\Details.cshtml" />
     <Content Include="Views\Professors\Edit.cshtml" />
     <Content Include="Views\Professors\Index.cshtml" />
@@ -341,8 +348,19 @@
     <Content Include="Views\Shared\_StudentNavBar.cshtml" />
     <Content Include="Views\Committees\MyIndex.cshtml" />
     <Content Include="Views\Groups\Index.cshtml" />
-    <Content Include="Views\Groups\Create.cshtml" />
+    <Content Include="Views\Groups\GroupForm.cshtml" />
     <Content Include="Views\Groups\test.cshtml" />
+    <Content Include="Views\Groups\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\Students\StudentForm.cshtml" />
+    <Content Include="Views\Students\NewStudentForm.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -405,6 +423,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908111946088_addJoinedToUserTable.resx">
       <DependentUpon>201908111946088_addJoinedToUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908141551449_addProjectAndProjectFileTablesToDb.resx">
+      <DependentUpon>201908141551449_addProjectAndProjectFileTablesToDb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
