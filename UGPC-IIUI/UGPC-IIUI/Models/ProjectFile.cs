@@ -14,5 +14,6 @@ namespace UGPC_IIUI.Models
         public string FilePath { get; set; }
 
         public string FileType { get; set; } //either proposal or something else like presentation etc
+        public string FileName { get; set; }
     }
 }

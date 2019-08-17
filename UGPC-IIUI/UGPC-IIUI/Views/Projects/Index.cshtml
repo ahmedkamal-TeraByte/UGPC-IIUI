@@ -7,52 +7,70 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Group.Student1Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SubmissionDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProjectType)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Group.Student1Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubmissionDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectType)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
-        </td>
-    </tr>
+@if (!Model.Any() && User.IsInRole("Student"))
+{
+    <p>
+        @Html.ActionLink("Submit Proposal", "Create",null, new {@class="btn btn-primary"})
+    </p>
+    <p>You haven't Submitted Project Proposal Yet.<br /><b> Submit a Proposal Now </b><br /><br />Or <b>Ask your Group Mate </b>to submit a Proposal!</p>
 }
 
-</table>
+else
+{
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+
+            <th>
+                Student 1
+            </th>
+
+            <th>
+                Student 2
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(m=>m.Status)
+            </th>
+
+            
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Student1.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Student2.Name)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(m=>item.Status)
+                </td>
+                @if (!User.IsInRole("Student"))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new {id = item.ProjectId}) |
+                        @Html.ActionLink("Details", "Details", new {id = item.ProjectId}) |
+                        @if (!User.IsInRole("Supervisor"))
+                        {
+                            @Html.ActionLink("Delete", "Delete", new {id = item.ProjectId})
+                        }
+                    </td>
+                }
+            </tr>
+        }
+
+    </table>
+}

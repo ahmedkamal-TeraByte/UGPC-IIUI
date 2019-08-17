@@ -182,6 +182,7 @@
     <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="CustomValidation\PdfOnlyAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -249,7 +250,24 @@
     <Compile Include="Migrations\201908141551449_addProjectAndProjectFileTablesToDb.Designer.cs">
       <DependentUpon>201908141551449_addProjectAndProjectFileTablesToDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908141956188_addFileNameToProjectFile.cs" />
+    <Compile Include="Migrations\201908141956188_addFileNameToProjectFile.Designer.cs">
+      <DependentUpon>201908141956188_addFileNameToProjectFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908150835596_addSupervisorToProject.cs" />
+    <Compile Include="Migrations\201908150835596_addSupervisorToProject.Designer.cs">
+      <DependentUpon>201908150835596_addSupervisorToProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908160521584_changeSupervisorIdInProject.cs" />
+    <Compile Include="Migrations\201908160521584_changeSupervisorIdInProject.Designer.cs">
+      <DependentUpon>201908160521584_changeSupervisorIdInProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170651263_addchangestabletodb.cs" />
+    <Compile Include="Migrations\201908170651263_addchangestabletodb.Designer.cs">
+      <DependentUpon>201908170651263_addchangestabletodb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
     <Compile Include="Models\Group.cs" />
@@ -265,6 +283,8 @@
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\NewProjectViewModel.cs" />
+    <Compile Include="ViewModels\ProjectViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -361,9 +381,10 @@
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Projects\test.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Files\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -426,6 +447,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908141551449_addProjectAndProjectFileTablesToDb.resx">
       <DependentUpon>201908141551449_addProjectAndProjectFileTablesToDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908141956188_addFileNameToProjectFile.resx">
+      <DependentUpon>201908141956188_addFileNameToProjectFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908150835596_addSupervisorToProject.resx">
+      <DependentUpon>201908150835596_addSupervisorToProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908160521584_changeSupervisorIdInProject.resx">
+      <DependentUpon>201908160521584_changeSupervisorIdInProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170651263_addchangestabletodb.resx">
+      <DependentUpon>201908170651263_addchangestabletodb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

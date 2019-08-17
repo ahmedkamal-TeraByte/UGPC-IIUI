@@ -23,6 +23,10 @@ namespace UGPC_IIUI.Models
         public int GroupId { get; set; }
         public Group Group { get; set; }
 
+        [Display(Name = "Supervisor")]
+        public string SupervisorId { get; set; }
+
+        public ApplicationUser Supervisor { get; set; }
 
     }
 }
