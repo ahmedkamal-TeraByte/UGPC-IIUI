@@ -19,15 +19,19 @@
         @Html.ActionLink("Create New Group", "Create", null, new { @class = "btn btn-primary" })
     </p>
 
-    <p>You're Not a Member of Any Group.<br /><b> Create a New Group </b><br /><br />Or <b>Ask a friend </b>to add you in his group!</p>
+    <p>You're Not a Member of Any Group.<br /><b> Create a New Group </b><br /><br />Or <b>Ask a friend </b>to add you in his group!
+        <br/>
+        <br/>
+        <b class="text-danger">
+            You can't submit a proposal for a project unless you are in a group
+        </b>
+    </p>
 }
 else
 {
     <table class="table">
         <tr>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.Id) *@
-            @* </th> *@
+
             <th>
                 @Html.DisplayNameFor(model => model.Student1Id)
 
@@ -41,10 +45,7 @@ else
         @foreach (var item in Model)
         {
             <tr>
-                @* <td> *@
-                @*     @Html.DisplayFor(modelItem => item.Id) *@
-                @* </td> *@
-                
+
                 @Html.HiddenFor(m=> item.Id)
                 <td>
                     @Html.DisplayFor(modelItem => item.Student1.Name)

@@ -165,9 +165,9 @@ namespace UGPC_IIUI.Controllers
                     UserName = model.UserName,
                     Email = model.Email,
                     DepartmentId = model.DepartmentId,
-                    Student = model.Student
-
+                    Student = model.Student,
                 };
+                user.Student.CanSubmitProposal = true;
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -417,7 +417,7 @@ namespace UGPC_IIUI.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         //

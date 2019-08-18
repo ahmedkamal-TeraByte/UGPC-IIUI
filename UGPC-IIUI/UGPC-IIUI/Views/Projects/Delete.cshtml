@@ -1,5 +1,4 @@
-﻿@model UGPC_IIUI.Models.Project
-
+﻿@model UGPC_IIUI.ViewModels.ProjectViewModel
 @{
     ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,13 +11,6 @@
     <h4>Project</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Group.Student1Id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Group.Student1Id)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Title)
@@ -27,6 +19,23 @@
         <dd>
             @Html.DisplayFor(model => model.Title)
         </dd>
+
+        <dt>
+            Student 1
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student1.Name)
+        </dd>
+
+        <dt>
+            Student 2
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student2.Name)
+        </dd>
+
 
         <dt>
             @Html.DisplayNameFor(model => model.SubmissionDate)

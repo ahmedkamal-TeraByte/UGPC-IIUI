@@ -16,5 +16,7 @@ namespace UGPC_IIUI.Models
 
         [Required]
         public string Section { get; set; }
+
+        public bool CanSubmitProposal { get; set; }
     }
 }

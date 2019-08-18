@@ -266,6 +266,10 @@
     <Compile Include="Migrations\201908170651263_addchangestabletodb.Designer.cs">
       <DependentUpon>201908170651263_addchangestabletodb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908170838474_addCanSubmitInStudent.cs" />
+    <Compile Include="Migrations\201908170838474_addCanSubmitInStudent.Designer.cs">
+      <DependentUpon>201908170838474_addCanSubmitInStudent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Committee.cs" />
@@ -279,6 +283,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="ViewModels\CommitteeMemberViewModel.cs" />
     <Compile Include="ViewModels\CommitteeViewModel.cs" />
+    <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Professor.cs" />
@@ -382,6 +387,7 @@
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Projects\test.cshtml" />
+    <Content Include="Views\Projects\AddNewFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
@@ -459,6 +465,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908170651263_addchangestabletodb.resx">
       <DependentUpon>201908170651263_addchangestabletodb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170838474_addCanSubmitInStudent.resx">
+      <DependentUpon>201908170838474_addCanSubmitInStudent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

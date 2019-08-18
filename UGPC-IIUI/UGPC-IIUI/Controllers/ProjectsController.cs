@@ -12,6 +12,7 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
@@ -29,13 +30,18 @@ namespace UGPC_IIUI.Controllers
         public ActionResult MyIndex()
         {
             var id = User.Identity.GetUserId();
-            var groupId = _context.Groups.Single(g => g.Student1Id == id || g.Student2Id == id).Id;
+            var group = _context.Groups.SingleOrDefault(g => g.Student1Id == id || g.Student2Id == id);
+            if (group == null)
+                return RedirectToAction("MyIndex", "Groups");
+            var groupId = group.Id;
             var projects = _context.Projects.Include(s => s.Group.Student1).Include(s => s.Group.Student2).Where(p => p.GroupId == groupId).ToList();
+            var check = _context.Users.Include(u => u.Student).Single(u => u.Id == id).Student.CanSubmitProposal;
+            ViewBag.CanSubmit = check;
             return View("Index", projects);
         }
 
         // GET: Projects/Details/5
-        [Authorize(Roles = "Admin,Committee Member , Committee Incharge")]
+        [Authorize(Roles = "Admin,Committee Member , Committee Incharge,Student")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,12 +49,37 @@ namespace UGPC_IIUI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Project project = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2).Single(p => p.ProjectId == id);
+            var project = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2).Include(s => s.Supervisor).Single(p => p.ProjectId == id);
             if (project == null)
             {
                 return HttpNotFound();
             }
-            return View(project);
+
+            if (!(User.IsInRole("Student")) || (User.Identity.GetUserId() == project.Group.Student1Id ||
+                User.Identity.GetUserId() == project.Group.Student2Id))
+            {
+                var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
+
+                var files = _context.ProjectFiles.Where(f => f.ProjectId == id).ToList();
+
+                var viewModel = new ProjectViewModel
+                {
+                    ProjectId = project.ProjectId,
+                    Title = project.Title,
+                    Student1 = project.Group.Student1,
+                    Student2 = project.Group.Student2,
+                    SubmissionDate = project.SubmissionDate,
+                    ProjectType = project.ProjectType,
+                    Status = project.Status,
+                    Changes = changes.Changes,
+                    Supervisor = project.Supervisor,
+                    ProjectFiles = files
+                };
+
+                return View(viewModel);
+            }
+            else
+                return RedirectToAction("Index");
         }
 
         // GET: Projects/Create
@@ -63,8 +94,13 @@ namespace UGPC_IIUI.Controllers
             };
             ViewBag.ProjectType = ProjectTypes;
             var id = User.Identity.GetUserId();
-            var groupId = _context.Groups.Single(g => g.Student1Id == id || g.Student2Id == id).Id;
+            var group = _context.Groups.SingleOrDefault(g => g.Student1Id == id || g.Student2Id == id);
+            if (group == null)
+            {
+                return RedirectToAction("MyIndex", "Groups");
+            }
 
+            var groupId = group.Id;
             var viewModel = new NewProjectViewModel
             {
                 GroupId = groupId,
@@ -78,7 +114,7 @@ namespace UGPC_IIUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Committee Member , Committee Incharge")]
+        [Authorize(Roles = "Admin,Student")]
         public ActionResult Create(NewProjectViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -110,8 +146,20 @@ namespace UGPC_IIUI.Controllers
                     FileType = "Proposal"
                 };
 
+                var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student).Single(g => g.Id == viewModel.GroupId);
+                group.Student1.Student.CanSubmitProposal = false;
+                group.Student2.Student.CanSubmitProposal = false;
+
+
                 _context.Projects.Add(project);
                 _context.ProjectFiles.Add(projectFile);
+                _context.SaveChanges();
+                var changes = new Change
+                {
+                    ProjectId = project.ProjectId
+                };
+
+                _context.Changes.Add(changes);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -136,7 +184,8 @@ namespace UGPC_IIUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var project = _context.Projects.Include(s => s.Group.Student1).Include(p => p.Group.Student2).Single(p => p.ProjectId == id);
+            var project = _context.Projects.Include(s => s.Group.Student1).Include(p => p.Group.Student2).Include(s => s.Supervisor).Single(p => p.ProjectId == id);
+
 
             if (project == null)
             {
@@ -151,8 +200,20 @@ namespace UGPC_IIUI.Controllers
                 ProjectType = project.ProjectType,
                 Student1 = project.Group.Student1,
                 Student2 = project.Group.Student2,
-                Status = project.Status
+                Status = project.Status,
+                // SupervisorId = project.Supervisor.Id
             };
+            if (project.SupervisorId == null)
+                viewModel.SupervisorId = null;
+            else
+            {
+                viewModel.SupervisorName = project.Supervisor.Name;
+                viewModel.SupervisorId = project.SupervisorId;
+            }
+
+            var change = _context.Changes.SingleOrDefault(c => c.ProjectId == id);
+            if (change != null)
+                viewModel.Changes = change.Changes;
             IEnumerable<SelectListItem> Status = new List<SelectListItem>
             {
                 new SelectListItem() { Value = "Proposal Submitted", Text = "Proposal Submitted" },
@@ -162,7 +223,9 @@ namespace UGPC_IIUI.Controllers
                 new SelectListItem() { Value = "Completed", Text = "Completed" },
                 new SelectListItem() { Value = "Rejected", Text = "Rejected" }
             };
-            ViewBag.Status = Status;
+            ViewBag.StatusList = Status;
+
+            viewModel.Supervisors = _context.Users.Where(u => u.StudentId == null && u.ProfessorId != null).ToList();
 
             //ViewBag.GroupId = new SelectList(_context.Groups, "Id", "Student1Id", project.GroupId);
             return View(viewModel);
@@ -180,8 +243,33 @@ namespace UGPC_IIUI.Controllers
             {
                 var project = _context.Projects.Find(viewModel.ProjectId);
                 if (project == null)
-                    return Content("NULL");
+                    return HttpNotFound("Project was Deleted");
                 project.Status = viewModel.Status;
+                project.SupervisorId = viewModel.SupervisorId;
+                if (viewModel.Status == "Rejected")
+                {
+                    var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student)
+                        .Single(g => g.Id == project.GroupId);
+                    group.Student1.Student.CanSubmitProposal = true;
+                    group.Student2.Student.CanSubmitProposal = true;
+                }
+
+                var change = _context.Changes.SingleOrDefault(c => c.ProjectId == viewModel.ProjectId);
+                if (change != null)
+                {
+                    change.Changes = viewModel.Changes;
+                }
+                else
+                {
+                    var changes = new Change
+                    {
+                        Changes = viewModel.Changes,
+                        ProjectId = project.ProjectId
+                    };
+
+                    _context.Changes.Add(changes);
+                }
+
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -195,6 +283,8 @@ namespace UGPC_IIUI.Controllers
                 new SelectListItem() { Value = "Rejected", Text = "Rejected" }
             };
             ViewBag.Status = Status;
+            viewModel.Supervisors = _context.Users.Where(u => u.StudentId == null && u.ProfessorId != null).ToList();
+
 
             return View(viewModel);
         }
@@ -207,12 +297,24 @@ namespace UGPC_IIUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = _context.Projects.Find(id);
+            var project = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2).Single(p => p.ProjectId == id);
             if (project == null)
             {
                 return HttpNotFound();
             }
-            return View(project);
+            var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
+            var viewModel = new ProjectViewModel
+            {
+                ProjectId = project.ProjectId,
+                Title = project.Title,
+                Student1 = project.Group.Student1,
+                Student2 = project.Group.Student2,
+                SubmissionDate = project.SubmissionDate,
+                ProjectType = project.ProjectType,
+                Status = project.Status,
+                Changes = changes.Changes
+            };
+            return View(viewModel);
         }
 
         // POST: Projects/Delete/5
@@ -222,9 +324,87 @@ namespace UGPC_IIUI.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Project project = _context.Projects.Find(id);
+
+            var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student).Single(g => g.Id == project.GroupId);
+            group.Student1.Student.CanSubmitProposal = true;
+            group.Student2.Student.CanSubmitProposal = true;
+            var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
             _context.Projects.Remove(project);
+            _context.Changes.Remove(changes);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        public ActionResult AddNewFile(int id)
+        {
+            var userId = User.Identity.GetUserId();
+            var project = _context.Projects.Include(s => s.Group).Single(p => p.ProjectId == id);
+            if (!(userId == project.Group.Student1Id || userId == project.Group.Student2Id))
+                return RedirectToAction("Index");
+            var viewModel = new FileViewModel
+            {
+                ProjectId = id
+            };
+            IEnumerable<SelectListItem> fileTypes = new List<SelectListItem>
+            {
+                new SelectListItem() { Value = "Proposal", Text = "Proposal" },
+                new SelectListItem() { Value = "Presentation", Text = "Presentation" },
+                new SelectListItem() { Value = "Others", Text = "Others" }
+            };
+            ViewBag.FileTypes = fileTypes;
+            return View(viewModel);
+        }
+
+
+        [HttpPost, ActionName("AddNewFile")]
+        [Authorize(Roles="Student")]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddNewFile(FileViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = Server.MapPath("~/App_Data/Files");
+                var fileName = Path.GetFileName(viewModel.ProjectFile.FileName);
+                fileName = DateTime.Now.ToString("yyMMddHHmmss") + fileName;
+
+                var fullPath = Path.Combine(path, fileName);
+
+                //saving the file in the server at "full path"
+                viewModel.ProjectFile.SaveAs(fullPath);
+
+                var projectFile = new ProjectFile
+                {
+                    FileName = fileName,
+                    ProjectId = viewModel.ProjectId,
+                    FilePath = fullPath,
+                    FileType = viewModel.FileType
+                };
+                _context.ProjectFiles.Add(projectFile);
+                _context.SaveChanges();
+
+                return RedirectToAction("Details", new {id = viewModel.ProjectId});
+            }
+
+            IEnumerable<SelectListItem> fileTypes = new List<SelectListItem>
+                {
+                    new SelectListItem() { Value = "Proposal", Text = "Proposal" },
+                    new SelectListItem() { Value = "Presentation", Text = "Presentation" },
+                    new SelectListItem() { Value = "Others", Text = "Others" }
+                };
+            ViewBag.FileTypes = fileTypes;
+            return View(viewModel);
+        }
+
+        public ActionResult DownloadFile(int id)
+        {
+            var file = _context.ProjectFiles.SingleOrDefault(f => f.ProjectFileId == id);
+            if (file == null)
+                return HttpNotFound("File not found");
+            var fullPath = file.FilePath;
+            var fileName = Path.GetFileName(fullPath);
+            var contentType = "application/pdf";
+            return File(fullPath, contentType, fileName);
         }
 
         protected override void Dispose(bool disposing)
@@ -240,8 +420,8 @@ namespace UGPC_IIUI.Controllers
 
         public ActionResult test()
         {
-            var viewModel= new ProjectViewModel();
-            viewModel.Status = "Proposal Submitted";
+            var viewModel = new ProjectViewModel();
+            viewModel.Status = "Proposal Accepted With Changes";
             IEnumerable<SelectListItem> Status = new List<SelectListItem>
             {
                 new SelectListItem() { Value = "Proposal Submitted", Text = "Proposal Submitted" },
@@ -255,5 +435,15 @@ namespace UGPC_IIUI.Controllers
             return View(viewModel);
         }
 
+        public ActionResult Testing(ProjectViewModel viewModel)
+        {
+            var status = viewModel.Changes;
+            return Content(status);
+        }
+
+        public void AddFile()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

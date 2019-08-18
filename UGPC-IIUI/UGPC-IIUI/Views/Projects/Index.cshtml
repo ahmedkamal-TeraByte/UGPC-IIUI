@@ -7,14 +7,28 @@
 
 <h2>Index</h2>
 
-@if (!Model.Any() && User.IsInRole("Student"))
+@if (User.IsInRole("Student") && ViewBag.CanSubmit)
 {
     <p>
         @Html.ActionLink("Submit Proposal", "Create",null, new {@class="btn btn-primary"})
     </p>
-    <p>You haven't Submitted Project Proposal Yet.<br /><b> Submit a Proposal Now </b><br /><br />Or <b>Ask your Group Mate </b>to submit a Proposal!</p>
+    if (Model.Any())
+     {
+         <p>Your Proposal has been <b>Rejected</b>.<br/><b> Submit a New Proposal Now </b><br/><br/>Or <b>Ask your Group Mate </b>to submit a Proposal!</p>
+     }
 }
+@if (!Model.Any())
+{
+    if (User.IsInRole("Student"))
+    {
+        <p>You haven't Submitted Project Proposal Yet.<br/><b> Submit a Proposal Now </b><br/><br/>Or <b>Ask your Group Mate </b>to submit a Proposal!</p>
+    }
+    else if (User.IsInRole("Admin"))
+    {
+        <p>Nobody has submitted Proposal Yet.! <br/><b> Nothing to do :) </b></p>
 
+    }
+}
 else
 {
     <table class="table">
@@ -58,17 +72,19 @@ else
                 <td>
                     @Html.DisplayFor(m=>item.Status)
                 </td>
-                @if (!User.IsInRole("Student"))
-                {
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new {id = item.ProjectId}) |
-                        @Html.ActionLink("Details", "Details", new {id = item.ProjectId}) |
-                        @if (!User.IsInRole("Supervisor"))
-                        {
-                            @Html.ActionLink("Delete", "Delete", new {id = item.ProjectId})
-                        }
-                    </td>
-                }
+               
+                <td>
+                    @if (!User.IsInRole("Student"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new {id = item.ProjectId})
+                    }|
+                    @Html.ActionLink("Details", "Details", new {id = item.ProjectId}) |
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new {id = item.ProjectId})
+                    }
+                </td>
+                
             </tr>
         }
 
