@@ -14,6 +14,8 @@ namespace UGPC_IIUI.Models
         public DbSet<ProjectFile> ProjectFiles { get; set; }
         public DbSet<Change> Changes { get; set; }
 
+        public DbSet<Presentation> Presentations { get; set; }
+
 
         public DbSet<CommitteeMember> CommitteeMembers { get; set; }
 

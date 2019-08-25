@@ -158,8 +158,16 @@ namespace UGPC_IIUI.Controllers
                 {
                     ProjectId = project.ProjectId
                 };
-
                 _context.Changes.Add(changes);
+
+                _context.SaveChanges();
+                var presentation = new Presentation
+                {
+                    ProjectId = project.ProjectId,
+                    Status = "NotScheduled"
+                };
+                _context.Presentations.Add(presentation);
+
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -220,8 +228,11 @@ namespace UGPC_IIUI.Controllers
                 new SelectListItem() { Value = "Proposal Accepted", Text = "Proposal Accepted" },
                 new SelectListItem() { Value = "Proposal Accepted With Changes", Text = "Proposal Accepted With Changes" },
                 new SelectListItem() { Value = "In Progress", Text = "In Progress" },
+                new SelectListItem() { Value = "Ready For Internal Evaluation", Text = "Ready For Internal Evaluation" },
+                new SelectListItem() { Value = "Ready For External Evaluation", Text = "Ready For External Evaluation" },
                 new SelectListItem() { Value = "Completed", Text = "Completed" },
                 new SelectListItem() { Value = "Rejected", Text = "Rejected" }
+
             };
             ViewBag.StatusList = Status;
 
@@ -252,6 +263,7 @@ namespace UGPC_IIUI.Controllers
                         .Single(g => g.Id == project.GroupId);
                     group.Student1.Student.CanSubmitProposal = true;
                     group.Student2.Student.CanSubmitProposal = true;
+
                 }
 
                 var change = _context.Changes.SingleOrDefault(c => c.ProjectId == viewModel.ProjectId);
@@ -279,6 +291,8 @@ namespace UGPC_IIUI.Controllers
                 new SelectListItem() { Value = "Proposal Accepted", Text = "Proposal Accepted" },
                 new SelectListItem() { Value = "Proposal Accepted With Changes", Text = "Proposal Accepted With Changes" },
                 new SelectListItem() { Value = "In Progress", Text = "In Progress" },
+                new SelectListItem() { Value = "Ready For Internal Evaluation", Text = "Ready For Internal Evaluation" },
+                new SelectListItem() { Value = "Ready For External Evaluation", Text = "Ready For External Evaluation" },
                 new SelectListItem() { Value = "Completed", Text = "Completed" },
                 new SelectListItem() { Value = "Rejected", Text = "Rejected" }
             };
@@ -329,6 +343,12 @@ namespace UGPC_IIUI.Controllers
             group.Student1.Student.CanSubmitProposal = true;
             group.Student2.Student.CanSubmitProposal = true;
             var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
+            var presentations = _context.Presentations.Where(p => p.ProjectId == project.ProjectId);
+            if (presentations != null)
+            {
+                foreach (var p in presentations)
+                    _context.Presentations.Remove(p);
+            }
             _context.Projects.Remove(project);
             _context.Changes.Remove(changes);
             _context.SaveChanges();
@@ -358,7 +378,7 @@ namespace UGPC_IIUI.Controllers
 
 
         [HttpPost, ActionName("AddNewFile")]
-        [Authorize(Roles="Student")]
+        [Authorize(Roles = "Student")]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewFile(FileViewModel viewModel)
         {
@@ -383,7 +403,7 @@ namespace UGPC_IIUI.Controllers
                 _context.ProjectFiles.Add(projectFile);
                 _context.SaveChanges();
 
-                return RedirectToAction("Details", new {id = viewModel.ProjectId});
+                return RedirectToAction("Details", new { id = viewModel.ProjectId });
             }
 
             IEnumerable<SelectListItem> fileTypes = new List<SelectListItem>

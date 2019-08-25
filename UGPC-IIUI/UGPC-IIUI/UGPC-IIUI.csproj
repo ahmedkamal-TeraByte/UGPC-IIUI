@@ -179,6 +179,7 @@
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PresentationsController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
@@ -270,11 +271,24 @@
     <Compile Include="Migrations\201908170838474_addCanSubmitInStudent.Designer.cs">
       <DependentUpon>201908170838474_addCanSubmitInStudent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908181757477_addPresentationToDb.cs" />
+    <Compile Include="Migrations\201908181757477_addPresentationToDb.Designer.cs">
+      <DependentUpon>201908181757477_addPresentationToDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908181902001_addTimeToPresentation.cs" />
+    <Compile Include="Migrations\201908181902001_addTimeToPresentation.Designer.cs">
+      <DependentUpon>201908181902001_addTimeToPresentation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908250616462_changesinpresentaiton.cs" />
+    <Compile Include="Migrations\201908250616462_changesinpresentaiton.Designer.cs">
+      <DependentUpon>201908250616462_changesinpresentaiton.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Presentation.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectFile.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -283,6 +297,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="ViewModels\CommitteeMemberViewModel.cs" />
     <Compile Include="ViewModels\CommitteeViewModel.cs" />
+    <Compile Include="ViewModels\CreatePresentationsViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
@@ -307,6 +322,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\UGPC-IIUI - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\UGPC-IIUI - Web Deploy1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -388,6 +405,11 @@
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Projects\test.cshtml" />
     <Content Include="Views\Projects\AddNewFile.cshtml" />
+    <Content Include="Views\Presentations\Create.cshtml" />
+    <Content Include="Views\Presentations\Delete.cshtml" />
+    <Content Include="Views\Presentations\Details.cshtml" />
+    <Content Include="Views\Presentations\Edit.cshtml" />
+    <Content Include="Views\Presentations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
@@ -468,6 +490,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908170838474_addCanSubmitInStudent.resx">
       <DependentUpon>201908170838474_addCanSubmitInStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908181757477_addPresentationToDb.resx">
+      <DependentUpon>201908181757477_addPresentationToDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908181902001_addTimeToPresentation.resx">
+      <DependentUpon>201908181902001_addTimeToPresentation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908250616462_changesinpresentaiton.resx">
+      <DependentUpon>201908250616462_changesinpresentaiton.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
