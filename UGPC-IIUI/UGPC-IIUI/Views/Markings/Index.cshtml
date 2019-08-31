@@ -1,0 +1,54 @@
+﻿@model IEnumerable<UGPC_IIUI.Models.Marking>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Project.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PresentationMarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SupervisorMarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InternalMarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExternalMarks)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PresentationMarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupervisorMarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InternalMarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExternalMarks)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MarkingId }) 
+        </td>
+    </tr>
+}
+
+</table>

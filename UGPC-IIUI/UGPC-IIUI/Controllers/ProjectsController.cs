@@ -5,8 +5,10 @@ using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net; 
 using System.Web.Mvc;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using UGPC_IIUI.Models;
 using UGPC_IIUI.ViewModels;
 
@@ -19,12 +21,20 @@ namespace UGPC_IIUI.Controllers
 
         [Authorize]
         // GET: Projects
+//        [Authorize(Roles = "Admin,Committee Incharge, Committee Member,Student")]
         public ActionResult Index()
         {
             if (User.IsInRole("Student"))
                 return RedirectToAction("MyIndex");
-            var projects = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2);
-            return View(projects.ToList());
+            else if (User.IsInRole("Committee Incharge")|| User.IsInRole("Committee Member") || User.IsInRole("Admin"))
+            { 
+                var projects = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2);
+                return View(projects.ToList());
+            }
+            else
+            {
+                return RedirectToAction("MyProjects");
+            }
         }
 
         public ActionResult MyIndex()
@@ -168,6 +178,7 @@ namespace UGPC_IIUI.Controllers
                 };
                 _context.Presentations.Add(presentation);
 
+                
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -257,13 +268,56 @@ namespace UGPC_IIUI.Controllers
                     return HttpNotFound("Project was Deleted");
                 project.Status = viewModel.Status;
                 project.SupervisorId = viewModel.SupervisorId;
-                if (viewModel.Status == "Rejected")
-                {
-                    var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student)
-                        .Single(g => g.Id == project.GroupId);
-                    group.Student1.Student.CanSubmitProposal = true;
-                    group.Student2.Student.CanSubmitProposal = true;
 
+                var marking = _context.Markings.SingleOrDefault(m => m.ProjectId == viewModel.ProjectId);
+                switch (viewModel.Status)
+                {
+                    case "Rejected":
+                    {
+                        var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student)
+                            .Single(g => g.Id == project.GroupId);
+                        @group.Student1.Student.CanSubmitProposal = true;
+                        @group.Student2.Student.CanSubmitProposal = true;
+                        break;
+                    }
+
+                    case "Proposal Accepted":
+                    {
+                        if (marking == null)
+                        {
+                            marking = new Marking
+                            {
+                                ProjectId = viewModel.ProjectId,
+                                PresentationMarks = viewModel.Marking
+                            };
+                            _context.Markings.Add(marking);
+                        }
+
+                        break;
+                    }
+
+                    case "Ready For Internal Evaluation":
+                    {
+                        if(marking!=null)
+                            marking.SupervisorMarks = viewModel.Marking;
+                        break;
+                    }
+
+                    case "Ready For External Evaluation":
+                    {
+                        if (marking != null)
+                            marking.InternalMarks = viewModel.Marking;
+                        break;
+                    }
+
+                    case "Completed":
+                    {
+                        if (marking != null)
+                            marking.ExternalMarks = viewModel.Marking;
+                        break;
+                    }
+                    default:
+                        break;
                 }
 
                 var change = _context.Changes.SingleOrDefault(c => c.ProjectId == viewModel.ProjectId);
@@ -285,6 +339,7 @@ namespace UGPC_IIUI.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            
             IEnumerable<SelectListItem> Status = new List<SelectListItem>
             {
                 new SelectListItem() { Value = "Proposal Submitted", Text = "Proposal Submitted" },
@@ -296,7 +351,7 @@ namespace UGPC_IIUI.Controllers
                 new SelectListItem() { Value = "Completed", Text = "Completed" },
                 new SelectListItem() { Value = "Rejected", Text = "Rejected" }
             };
-            ViewBag.Status = Status;
+            ViewBag.StatusList = Status;
             viewModel.Supervisors = _context.Users.Where(u => u.StudentId == null && u.ProfessorId != null).ToList();
 
 
@@ -344,12 +399,14 @@ namespace UGPC_IIUI.Controllers
             group.Student2.Student.CanSubmitProposal = true;
             var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
             var presentations = _context.Presentations.Where(p => p.ProjectId == project.ProjectId);
+            var marking = _context.Markings.SingleOrDefault(m => m.ProjectId == id);
             if (presentations != null)
             {
                 foreach (var p in presentations)
                     _context.Presentations.Remove(p);
             }
             _context.Projects.Remove(project);
+            _context.Markings.Remove(marking);
             _context.Changes.Remove(changes);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -436,34 +493,313 @@ namespace UGPC_IIUI.Controllers
             base.Dispose(disposing);
         }
 
-
-
-        public ActionResult test()
+        [Authorize(Roles = "Supervisor")]
+        public ActionResult MyProjects()
         {
-            var viewModel = new ProjectViewModel();
-            viewModel.Status = "Proposal Accepted With Changes";
-            IEnumerable<SelectListItem> Status = new List<SelectListItem>
+            var superId = User.Identity.GetUserId();
+
+            var projects = _context.Projects.Include(p=>p.Group.Student1).Include(p=>p.Group.Student2).Where(p => p.SupervisorId == superId).ToList();
+
+            return View("Index", projects);
+        }
+
+        public ActionResult GenerateLetter(int id)
+        {
+            PrepareReport(id);
+            return RedirectToAction("Edit", new {id = id});
+        }
+
+
+        private void PrepareReport(int id)
+        {
+            var project = _context.Projects
+                .Include(pr=>pr.Group.Student1)
+                .Include(pr => pr.Group.Student1.Student)
+                .Include(pr => pr.Group.Student1.Department)
+                .Include(pr=>pr.Group.Student2)
+                .Include(pr => pr.Group.Student2.Student)
+                .Include(pr=>pr.Supervisor)
+                .Single(pr=>pr.ProjectId==id);
+            if (project == null)
+                return;
+
+            var pdfDocument = new Document(PageSize.A4, 50f, 40f, 20f, 20f);
+
+
+            #region creating file
+
+            var path = Server.MapPath("~/App_Data/Files");
+            var fileName = Path.GetFileName("Project Letter");
+            fileName = DateTime.Now.ToString("yyMMddHHmmss-") + fileName + ".pdf";
+            var fullPath = Path.Combine(path, fileName);
+            PdfWriter.GetInstance(pdfDocument, new FileStream(fullPath, FileMode.Create));
+            pdfDocument.Open();
+
+            #endregion
+
+            #region declarations
+
+            //temp declarations
+            var projectId = id;
+            var title = project.Title;
+            var student1Name = project.Group.Student1.Name;
+            var student2Name = project.Group.Student2.Name;
+            var professorName = project.Supervisor.Name;
+            var regNo1 = project.Group.Student1.Student.RegNo;
+            var regNo2 = project.Group.Student2.Student.RegNo;
+            var batch = project.Group.Student1.Student.Batch;
+            var single = regNo1 == regNo2;
+            var programme = project.Group.Student1.Department.Name;
+            if (programme == "Software Engineering")
+                programme = "BSSE";
+            else if (programme == "Computer Science")
+                programme = "BSCS";
+            else if (programme == "Information Technology")
+                programme = "BSIT";
+            var chairman = "Dr. Ayyaz Hussain";
+            ///////////////
+
+            var bfTimes = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false);
+            var boldFont = new Font(bfTimes, 13, Font.BOLD, iTextSharp.text.BaseColor.BLACK);
+            var boldItalicFont = new Font(bfTimes, 13, Font.BOLDITALIC, iTextSharp.text.BaseColor.BLACK);
+            var normalFont = new Font(bfTimes, 12, Font.NORMAL, iTextSharp.text.BaseColor.BLACK);
+            var italicFont = new Font(bfTimes, 12, Font.ITALIC, iTextSharp.text.BaseColor.BLACK);
+            var boldUnderlineFont = new Font(bfTimes, 12, Font.BOLD | Font.UNDERLINE, iTextSharp.text.BaseColor.BLACK);
+
+
+            var imgpath = Server.MapPath("~/App_Data/Images");
+            var imgfileName = Path.GetFileName("logo.png");
+            var imgfullPath = Path.Combine(imgpath, imgfileName);
+            var img = Image.GetInstance(imgfullPath);
+            img.ScaleAbsolute(60f, 60f);
+
+            #endregion
+
+
+
+            #region Header
+
+
+            //////////////////////////
+            //Header of Letter
+            /////////////////////////
+
+
+            //creating at table with 2 columns
+            var headerTable = new PdfPTable(2);
+            float[] width = { 70f, 525f };
+            headerTable.SetWidthPercentage(width, PageSize.A4);
+
+            //left column that will have the logo
+            var leftCell = new PdfPCell();
+            img.Alignment = Element.ALIGN_LEFT;
+            leftCell.AddElement(img);
+            leftCell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+
+            //add column to table
+            headerTable.AddCell(leftCell);
+
+
+            //right column that will have header text
+            var rightCell = new PdfPCell();
+            var p = new Paragraph();
+            p.Alignment = Element.ALIGN_CENTER;
+            p.Add(new Phrase("INTERNATIONAL ISLAMIC UNIVERSITY, ISLAMABAD\n", boldFont));
+            p.Add(new Phrase("FACULTY OF BASIC AND APPLIED SCIENCES\n", boldFont));
+            p.Add(new Phrase("DEPARTMENT OF COMPUTER SCIENCE & SOFTWARE ENGINEERING", boldFont));
+
+            //add text to column
+            rightCell.AddElement(p);
+            rightCell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+            rightCell.PaddingLeft = 5f;
+
+            //add column to table
+            headerTable.AddCell(rightCell);
+
+            //add header table to document
+            pdfDocument.Add(headerTable);
+
+            #endregion
+
+
+            #region DateAndLetterNum
+
+            var dateNumTable = new PdfPTable(2);
+
+            dateNumTable.SetWidthPercentage(new float[] { 297f, 297f }, PageSize.A4);
+
+
+
+            p.Clear();
+            p.Add(new Phrase("No. IIU/FBAS/DCS&SE/"+DateTime.Now.Date.Year +"-"+ projectId, normalFont));
+            p.Alignment = Element.ALIGN_LEFT;
+            var left = new PdfPCell();
+            left.AddElement(p);
+            left.Border = Rectangle.NO_BORDER;
+
+
+            dateNumTable.AddCell(left);
+
+            p.Clear();
+
+            var date = DateTime.Now.ToString("dd-MM-yyyy");
+            p.Add(new Phrase("Date:" + date, normalFont));
+            p.Alignment = Element.ALIGN_RIGHT;
+            var right = new PdfPCell();
+            right.AddElement(p);
+            right.Border = Rectangle.NO_BORDER;
+            dateNumTable.AddCell(right);
+
+
+            pdfDocument.Add(dateNumTable);
+
+
+
+            #endregion
+
+            p.Clear();
+            p.Add(new Phrase("\n", normalFont));
+            pdfDocument.Add(p);
+
+            #region subject
+
+            var subjectTable = new PdfPTable(2);
+
+            subjectTable.SetWidthPercentage(new float[] { 60f, 535f }, PageSize.A4);
+
+            p.Clear();
+            p.Add(new Phrase("Subject:", normalFont));
+            p.Alignment = Element.ALIGN_LEFT;
+            var subjectTitle = new PdfPCell();
+            subjectTitle.AddElement(p);
+            subjectTitle.Border = Rectangle.NO_BORDER;
+
+
+            subjectTable.AddCell(subjectTitle);
+
+            var subjectData = new PdfPCell();
+            p.Clear();
+            p.Add(new Phrase("ALLOCATION OF PROVISIONAL SUPERVISION LETTER FOR " + programme + " PROJECT,\n", boldUnderlineFont));
+            p.Add(new Phrase("\"" + title + "\"", normalFont));
+            p.Alignment = Element.ALIGN_LEFT;
+            subjectData.AddElement(p);
+            subjectData.Border = Rectangle.NO_BORDER;
+            subjectTable.AddCell(subjectData);
+
+
+            pdfDocument.Add(subjectTable);
+
+            #endregion
+
+            #region Bodytext
+
+            boldItalicFont.Size = 12;
+            p.Clear();
+            p.Add(new Phrase(@"
+        The Department has allocated project titled above to ", normalFont));
+            p.Add(new Phrase("Mr. " + student1Name + " Registration No. " + regNo1 + "-" + "FBAS/" + programme + "/" + batch,boldItalicFont));
+            if(!single)
+                p.Add(new Phrase(" and Mr. " + student2Name + " Registration No. " + regNo2 + "-" + "FBAS/" + programme + "/" + batch, boldItalicFont));
+
+            p.Add(new Phrase( ". " + professorName + ",", boldItalicFont));
+            p.Add(new Phrase(
+                @" from Department of Computer Science & Software Engineering, Faculty of Basic and Applied Sciences, International Islamic University, Islamabad will supervise the project. The work should be completed within one semester"
+                , normalFont));
+            p.Add(new Phrase(
+                @"
+        If the project is not completed within the prescribed period then you have to re-register in the next semester with only registration fee. Students failing to complete the project even in this additional duration will have to pay full fee for the subsequent semesters that will include the project fee plus registration fee."
+                , italicFont));
+            p.Add(new Phrase(
+                @"
+        Weekly progress report duly signed by the supervisor must also be submitted to the Program Coordinator. Project presentation within the concerned SIG after every three weeks is mandatory. Project will be evaluated as per the following criteria:-"
+                , normalFont));
+
+            p.Add(new Phrase("\n", normalFont));
+            p.Alignment = Element.ALIGN_JUSTIFIED;
+            pdfDocument.Add(p);
+
+            var list = new List(List.UNORDERED);
+            list.SetListSymbol("\u2022");
+            list.IndentationLeft = 20f;
+            list.Add(new ListItem("Scope", normalFont));
+            list.Add(new ListItem("Project utility", normalFont));
+            list.Add(new ListItem("Innovation", normalFont));
+            list.Add(new ListItem("Selection of appropriate technology", normalFont));
+            list.Add(new ListItem("Approach/ Implementation", normalFont));
+            list.Add(new ListItem("Report write-up", normalFont));
+            list.Add(new ListItem("Demo/ Presentation", normalFont));
+            pdfDocument.Add(list);
+
+            p.Clear();
+            p.Add(new Phrase(
+                @"
+        The student must submit the copies of project report within three months after the Viva Voce Exam; otherwise whole process will be done again,"
+                , normalFont));
+            p.Alignment = Element.ALIGN_JUSTIFIED;
+
+            pdfDocument.Add(p);
+            #endregion
+
+            #region Chairman Name
+
+            var chairmanTable = new PdfPTable(2);
+            chairmanTable.SetWidthPercentage(new float[] { 297f, 297f }, PageSize.A4);
+
+            var chairmanLeftCell = new PdfPCell();
+            chairmanLeftCell.Border = Rectangle.NO_BORDER;
+
+            chairmanTable.AddCell(chairmanLeftCell);
+
+            var chairmanRightCell = new PdfPCell();
+            chairmanRightCell.Border = Rectangle.NO_BORDER;
+            p.Clear();
+            p.Add(new Phrase("\n\n", normalFont));
+            pdfDocument.Add(p);
+            p.Clear();
+
+            boldFont.Size = 12;
+            p.Add(new Phrase("(" + chairman + ")", boldFont));
+            p.Add(new Phrase("\nChairman, DCS&SE, FBAS, IIUI", normalFont));
+            p.Alignment = Element.ALIGN_CENTER;
+            chairmanRightCell.AddElement(p);
+            chairmanRightCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            chairmanTable.AddCell(chairmanRightCell);
+            pdfDocument.Add(chairmanTable);
+
+
+            p.Clear();
+            p.Add(new Phrase("\n CC to:\n\n", normalFont));
+            p.Alignment = Element.ALIGN_LEFT;
+            pdfDocument.Add(p);
+
+            var ccList = new List(List.UNORDERED);
+            ccList.SetListSymbol("\u2022");
+            ccList.IndentationLeft = 20f;
+            ccList.Add(new ListItem("Supervisor of Student", normalFont));
+            ccList.Add(new ListItem("Concerned Student", normalFont));
+            ccList.Add(new ListItem("Program Office", normalFont));
+
+            pdfDocument.Add(ccList);
+
+            #endregion
+
+            #region savefiletoDB
+
+            var projectFile = new ProjectFile
             {
-                new SelectListItem() { Value = "Proposal Submitted", Text = "Proposal Submitted" },
-                new SelectListItem() { Value = "Proposal Accepted", Text = "Proposal Accepted" },
-                new SelectListItem() { Value = "Proposal Accepted With Changes", Text = "Proposal Accepted With Changes" },
-                new SelectListItem() { Value = "In Progress", Text = "In Progress" },
-                new SelectListItem() { Value = "Completed", Text = "Completed" },
-                new SelectListItem() { Value = "Rejected", Text = "Rejected" }
+                FileName = fileName,
+                ProjectId =id,
+                FilePath = fullPath,
+                FileType = "Project Letter"
             };
-            ViewBag.Status1 = Status;
-            return View(viewModel);
+            _context.ProjectFiles.Add(projectFile);
+            _context.SaveChanges();
+
+
+            #endregion
+
+            pdfDocument.Close();
         }
 
-        public ActionResult Testing(ProjectViewModel viewModel)
-        {
-            var status = viewModel.Changes;
-            return Content(status);
-        }
-
-        public void AddFile()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

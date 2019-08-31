@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -179,6 +182,7 @@
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MarkingsController.cs" />
     <Compile Include="Controllers\PresentationsController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
@@ -283,11 +287,20 @@
     <Compile Include="Migrations\201908250616462_changesinpresentaiton.Designer.cs">
       <DependentUpon>201908250616462_changesinpresentaiton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908251715290_addMarkingsToDb.cs" />
+    <Compile Include="Migrations\201908251715290_addMarkingsToDb.Designer.cs">
+      <DependentUpon>201908251715290_addMarkingsToDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908252015512_changeIntToFloatInMarkings.cs" />
+    <Compile Include="Migrations\201908252015512_changeIntToFloatInMarkings.Designer.cs">
+      <DependentUpon>201908252015512_changeIntToFloatInMarkings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Marking.cs" />
     <Compile Include="Models\Presentation.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectFile.cs" />
@@ -311,6 +324,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Images\logo.png" />
     <Content Include="Content\bootstrap-lumen.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -320,6 +334,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\iiui-logo.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\UGPC-IIUI - Web Deploy.pubxml" />
@@ -410,6 +425,8 @@
     <Content Include="Views\Presentations\Details.cshtml" />
     <Content Include="Views\Presentations\Edit.cshtml" />
     <Content Include="Views\Presentations\Index.cshtml" />
+    <Content Include="Views\Markings\Edit.cshtml" />
+    <Content Include="Views\Markings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
@@ -499,6 +516,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908250616462_changesinpresentaiton.resx">
       <DependentUpon>201908250616462_changesinpresentaiton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908251715290_addMarkingsToDb.resx">
+      <DependentUpon>201908251715290_addMarkingsToDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908252015512_changeIntToFloatInMarkings.resx">
+      <DependentUpon>201908252015512_changeIntToFloatInMarkings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

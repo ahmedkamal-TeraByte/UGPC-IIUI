@@ -37,5 +37,6 @@ namespace UGPC_IIUI.ViewModels
         public string SupervisorName { get; set; }
 
         public IEnumerable<ProjectFile> ProjectFiles { get; set; }
+        public float Marking { get; set; }
     }
 }
