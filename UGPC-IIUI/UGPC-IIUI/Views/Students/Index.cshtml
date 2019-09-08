@@ -5,13 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null , new {@class="btn btn-primary"})
 </p>
-<table class="table">
-    <tr>
+<table id="studentsTable" class="table table-responsive table-hover table-striped">
+    <thead style="background-color: #00A65A">
+    <tr style="color: white">
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
@@ -19,7 +18,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Student.RegNo)
         </th>
-        
+
         <th>
             Programme
         </th>
@@ -37,35 +36,47 @@
         </th>
         <th></th>
     </tr>
+    </thead>
+    <tbody>
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    
-    <td>
-        @Html.DisplayFor(modelItem => item.Student.RegNo)
-    </td>
-    
-    <td>
-        BS
-    </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
 
-    <td>
-        @Html.DisplayFor(modelItem => item.Department.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Student.Batch)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Student.Section)
-    </td>
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }) |
-        @Html.ActionLink("Details", "Details", new { id = item.StudentId }) 
-    </td>
-</tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.RegNo)
+                </td>
+
+                <td>
+                    BS
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Batch)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Section)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }, new { @class = "btn btn-secondary btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#studentsTable").DataTable();
+        });
+    </script>
+}

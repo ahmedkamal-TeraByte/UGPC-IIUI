@@ -10,11 +10,12 @@ namespace UGPC_IIUI.ViewModels
         [Required]
         public string Title { get; set; }
 
-
+        [Display(Name = "Submitted On")]
         [DataType(DataType.Date)]
         [Required]
         public DateTime? SubmissionDate { get; set; }
 
+        [Display(Name = "Project Type")]
         public string ProjectType { get; set; }
 
         public int GroupId { get; set; }

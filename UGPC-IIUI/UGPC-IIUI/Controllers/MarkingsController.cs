@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using UGPC_IIUI.Models;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class MarkingsController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
@@ -17,11 +14,11 @@ namespace UGPC_IIUI.Controllers
         // GET: Markings
         public ActionResult Index()
         {
-            var markings = _context.Markings.Include(m => m.Project);
+            var markings = _context.Markings.Include(m => m.Project.Group.Student1).Include(m => m.Project.Group.Student1.Student).Include(m => m.Project.Group.Student2).Include(m => m.Project.Group.Student2.Student).Include(m => m.Project);
             return View(markings.ToList());
         }
 
-        
+
 
         // GET: Markings/Edit/5
         public ActionResult Edit(int? id)
@@ -30,7 +27,7 @@ namespace UGPC_IIUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Marking marking = _context.Markings.Include(m=>m.Project).Single(m=>m.MarkingId==id);
+            Marking marking = _context.Markings.Include(m => m.Project).Single(m => m.MarkingId == id);
             if (marking == null)
             {
                 return HttpNotFound();
@@ -56,7 +53,7 @@ namespace UGPC_IIUI.Controllers
             return View(marking);
         }
 
-       
+
 
         protected override void Dispose(bool disposing)
         {

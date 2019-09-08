@@ -13,6 +13,7 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize]
     public class CommitteesController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
@@ -173,8 +174,22 @@ namespace UGPC_IIUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Committee committee = _context.Committees.Find(id);
+            var committee = _context.Committees.Find(id);
             _context.Committees.Remove(committee);
+            var members=_context.CommitteeMembers.Where(c => c.CommitteeId == id).ToList();
+            foreach (var m in members)
+            {
+                _context.CommitteeMembers.Remove(m);
+                var currentRole = "";
+                var memberRole = UserManager.GetRoles(m.UserId);
+                foreach (var r in memberRole)
+                {
+                    if (r.Equals("Committee Member") || r.Equals("Committee Incharge"))
+                        currentRole = r;
+                }
+
+                var result = UserManager.RemoveFromRole(m.UserId, currentRole);
+            }
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -265,7 +280,7 @@ namespace UGPC_IIUI.Controllers
 
 
         [Authorize(Roles = "Admin, Committee Incharge")]
-        public ActionResult AddNewMember(int committeeId)
+        public ActionResult AddNewMember(int id)
         {
             var users = _context.Users.Where(u => u.ProfessorId != null & u.StudentId == null).ToList();
             var committeeMembers = _context.CommitteeMembers.ToList();
@@ -299,7 +314,7 @@ namespace UGPC_IIUI.Controllers
 
             var viewModel = new CommitteeMemberViewModel()
             {
-                CommitteeId = committeeId
+                CommitteeId = id
             };
 
 
@@ -378,8 +393,20 @@ namespace UGPC_IIUI.Controllers
         public ActionResult MyIndex()
         {
             var userId = User.Identity.GetUserId();
-            var committeeId = (_context.CommitteeMembers.Single(m => m.UserId == userId)).CommitteeId;
-            return View(_context.Committees.Where(c=> c.CommitteeId==committeeId).ToList());
+            var membership = _context.CommitteeMembers.SingleOrDefault(m => m.UserId == userId);
+            if (membership != null)
+            {
+                var committeeId = membership.CommitteeId;
+
+                var committees = _context.Committees.Where(c => c.CommitteeId == committeeId).ToList();
+                ViewBag.check = "yes";
+                return View(committees);
+            }
+            else
+            {
+                ViewBag.check = "no";
+                return View();
+            }
         }
     }
 }

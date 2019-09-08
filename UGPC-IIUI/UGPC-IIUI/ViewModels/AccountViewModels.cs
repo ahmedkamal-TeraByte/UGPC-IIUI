@@ -49,7 +49,7 @@ namespace UGPC_IIUI.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "UserName")]
+        [Display(Name = "Username")]
         //        [EmailAddress]
         public string UserName { get; set; }
 

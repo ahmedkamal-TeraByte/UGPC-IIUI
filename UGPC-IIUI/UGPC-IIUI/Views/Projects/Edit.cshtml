@@ -5,15 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-<h4>Project</h4>
+<h2>Edit Project Details</h2>
+
 <hr />
 <div class="row">
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal col-md-6">
+        <div class="form-horizontal col-md-8">
 
             @Html.HiddenFor(model => model.ProjectId)
 
@@ -105,12 +105,9 @@
             </div>
         </div>
 
-        <div class="col-md-2" id="generateLetterDiv">
-            @Html.ActionLink("Generate Project Letter","GenerateLetter", new {@id=@Model.ProjectId},new {@class="btn btn-primary"})
-            <label>Please Select Supervisor and Click <b>Save </b>button Before Generating Project Letter</label>
-        </div>
+       
 
-        <div class="col-md-4 pull-left">
+        <div class="col-md-4">
 
             <div class="form-group">
                 @Html.Label("Supervisor", htmlAttributes: new {@class = "control-label "})
@@ -127,7 +124,9 @@
                     @Html.TextAreaFor(model => model.Changes, new {@class = "form-control", @id = "txtArea", @rows = 13})
                 </div>
             </div>
-
+            
+            @Html.ActionLink("Generate Project Letter","GenerateLetter", new {@id=@Model.ProjectId},new {@class="btn btn-primary"})
+            <label>Please Select Supervisor and Click <b>Save </b>button Before Generating Project Letter</label>
 
         </div>
      }
@@ -135,7 +134,8 @@
 
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",null, new {@class="btn btn-default"})
+    @Html.ActionLink("Project Details", "Details",new{id=Model.ProjectId}, new {@class="btn btn-secondary"})
 </div>
 
 @section Scripts

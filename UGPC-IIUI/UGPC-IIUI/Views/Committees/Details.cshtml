@@ -14,21 +14,17 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
     { 
-        @Html.ActionLink("Add Members","AddNewMember", new {committeeId=Model.Committee.CommitteeId}, new {@class="btn btn-primary "})
+        @Html.ActionLink("Add Members","AddNewMember", new {id=Model.Committee.CommitteeId}, new {@class="btn btn-primary "})
     }
     <div>
         <br />
     </div>
-    <table class=" table table-bordered table-hover">
-        <thead>
-        <tr>
+    <table id="comdetailsTable" class=" table table-responsive table-hover table-striped">
+        <thead style="background-color: #00a65a">
+        <tr style="color: white">
             <th><b>Professor Name</b></th>
             <th><b>Role in Committee</b></th>
-            @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
-            {
-                <th><b>Edit</b></th>
-                <th><b>Delete</b></th>
-            }
+            <th></th>
         </tr>
         </thead>
         
@@ -54,11 +50,9 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
                         {
                             <td>
-                                @Html.ActionLink("Edit", "EditMember", new {id = p.Key.ProfessorId})
-                            </td>
-
-                            <td>
-                                @Html.ActionLink("Delete", "DeleteMember", new {id = p.Key.ProfessorId})
+                                @Html.ActionLink("Edit", "EditMember", new {id = p.Key.ProfessorId},new{@class="btn btn-secondary"})
+                            
+                                @Html.ActionLink("Delete", "DeleteMember", new {id = p.Key.ProfessorId},new{@class="btn btn-danger"})
                             </td>
                         }
                     </tr>
@@ -72,7 +66,15 @@
 <p>
     @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
     {
-        @Html.ActionLink("Edit", "Edit", new {id = Model.Committee.CommitteeId}) 
+        @Html.ActionLink("Edit", "Edit", new {id = Model.Committee.CommitteeId}, new{@class="btn btn-secondary"}) 
     }
-    | @Html.ActionLink("Back to List", "Index")
+     @Html.ActionLink("Back to List", "Index",null, new {@class="btn btn-default"})
 </p>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#comdetailsTable").DataTable();
+        });
+    </script>
+}

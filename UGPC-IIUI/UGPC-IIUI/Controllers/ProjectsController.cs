@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Net; 
+using System.Net;
 using System.Web.Mvc;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using UGPC_IIUI.Models;
 using UGPC_IIUI.ViewModels;
 
@@ -21,13 +21,13 @@ namespace UGPC_IIUI.Controllers
 
         [Authorize]
         // GET: Projects
-//        [Authorize(Roles = "Admin,Committee Incharge, Committee Member,Student")]
+        //        [Authorize(Roles = "Admin,Committee Incharge, Committee Member,Student")]
         public ActionResult Index()
         {
             if (User.IsInRole("Student"))
                 return RedirectToAction("MyIndex");
-            else if (User.IsInRole("Committee Incharge")|| User.IsInRole("Committee Member") || User.IsInRole("Admin"))
-            { 
+            else if (User.IsInRole("Committee Incharge") || User.IsInRole("Committee Member") || User.IsInRole("Admin"))
+            {
                 var projects = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2);
                 return View(projects.ToList());
             }
@@ -178,7 +178,7 @@ namespace UGPC_IIUI.Controllers
                 };
                 _context.Presentations.Add(presentation);
 
-                
+
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -273,49 +273,49 @@ namespace UGPC_IIUI.Controllers
                 switch (viewModel.Status)
                 {
                     case "Rejected":
-                    {
-                        var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student)
-                            .Single(g => g.Id == project.GroupId);
-                        @group.Student1.Student.CanSubmitProposal = true;
-                        @group.Student2.Student.CanSubmitProposal = true;
-                        break;
-                    }
-
-                    case "Proposal Accepted":
-                    {
-                        if (marking == null)
                         {
-                            marking = new Marking
-                            {
-                                ProjectId = viewModel.ProjectId,
-                                PresentationMarks = viewModel.Marking
-                            };
-                            _context.Markings.Add(marking);
+                            var group = _context.Groups.Include(g => g.Student1.Student).Include(g => g.Student2.Student)
+                                .Single(g => g.Id == project.GroupId);
+                            @group.Student1.Student.CanSubmitProposal = true;
+                            @group.Student2.Student.CanSubmitProposal = true;
+                            break;
                         }
 
-                        break;
-                    }
+                    case "Proposal Accepted":
+                        {
+                            if (marking == null)
+                            {
+                                marking = new Marking
+                                {
+                                    ProjectId = viewModel.ProjectId,
+                                    PresentationMarks = viewModel.Marking
+                                };
+                                _context.Markings.Add(marking);
+                            }
+
+                            break;
+                        }
 
                     case "Ready For Internal Evaluation":
-                    {
-                        if(marking!=null)
-                            marking.SupervisorMarks = viewModel.Marking;
-                        break;
-                    }
+                        {
+                            if (marking != null)
+                                marking.SupervisorMarks = viewModel.Marking;
+                            break;
+                        }
 
                     case "Ready For External Evaluation":
-                    {
-                        if (marking != null)
-                            marking.InternalMarks = viewModel.Marking;
-                        break;
-                    }
+                        {
+                            if (marking != null)
+                                marking.InternalMarks = viewModel.Marking;
+                            break;
+                        }
 
                     case "Completed":
-                    {
-                        if (marking != null)
-                            marking.ExternalMarks = viewModel.Marking;
-                        break;
-                    }
+                        {
+                            if (marking != null)
+                                marking.ExternalMarks = viewModel.Marking;
+                            break;
+                        }
                     default:
                         break;
                 }
@@ -339,7 +339,7 @@ namespace UGPC_IIUI.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            
+
             IEnumerable<SelectListItem> Status = new List<SelectListItem>
             {
                 new SelectListItem() { Value = "Proposal Submitted", Text = "Proposal Submitted" },
@@ -498,7 +498,7 @@ namespace UGPC_IIUI.Controllers
         {
             var superId = User.Identity.GetUserId();
 
-            var projects = _context.Projects.Include(p=>p.Group.Student1).Include(p=>p.Group.Student2).Where(p => p.SupervisorId == superId).ToList();
+            var projects = _context.Projects.Include(p => p.Group.Student1).Include(p => p.Group.Student2).Where(p => p.SupervisorId == superId).ToList();
 
             return View("Index", projects);
         }
@@ -506,20 +506,20 @@ namespace UGPC_IIUI.Controllers
         public ActionResult GenerateLetter(int id)
         {
             PrepareReport(id);
-            return RedirectToAction("Edit", new {id = id});
+            return RedirectToAction("Details", new { id = id });
         }
 
 
         private void PrepareReport(int id)
         {
             var project = _context.Projects
-                .Include(pr=>pr.Group.Student1)
+                .Include(pr => pr.Group.Student1)
                 .Include(pr => pr.Group.Student1.Student)
                 .Include(pr => pr.Group.Student1.Department)
-                .Include(pr=>pr.Group.Student2)
+                .Include(pr => pr.Group.Student2)
                 .Include(pr => pr.Group.Student2.Student)
-                .Include(pr=>pr.Supervisor)
-                .Single(pr=>pr.ProjectId==id);
+                .Include(pr => pr.Supervisor)
+                .Single(pr => pr.ProjectId == id);
             if (project == null)
                 return;
 
@@ -631,7 +631,7 @@ namespace UGPC_IIUI.Controllers
 
 
             p.Clear();
-            p.Add(new Phrase("No. IIU/FBAS/DCS&SE/"+DateTime.Now.Date.Year +"-"+ projectId, normalFont));
+            p.Add(new Phrase("No. IIU/FBAS/DCS&SE/" + DateTime.Now.Date.Year + "-" + projectId, normalFont));
             p.Alignment = Element.ALIGN_LEFT;
             var left = new PdfPCell();
             left.AddElement(p);
@@ -697,11 +697,11 @@ namespace UGPC_IIUI.Controllers
             p.Clear();
             p.Add(new Phrase(@"
         The Department has allocated project titled above to ", normalFont));
-            p.Add(new Phrase("Mr. " + student1Name + " Registration No. " + regNo1 + "-" + "FBAS/" + programme + "/" + batch,boldItalicFont));
-            if(!single)
+            p.Add(new Phrase("Mr. " + student1Name + " Registration No. " + regNo1 + "-" + "FBAS/" + programme + "/" + batch, boldItalicFont));
+            if (!single)
                 p.Add(new Phrase(" and Mr. " + student2Name + " Registration No. " + regNo2 + "-" + "FBAS/" + programme + "/" + batch, boldItalicFont));
 
-            p.Add(new Phrase( ". " + professorName + ",", boldItalicFont));
+            p.Add(new Phrase(". " + professorName + ",", boldItalicFont));
             p.Add(new Phrase(
                 @" from Department of Computer Science & Software Engineering, Faculty of Basic and Applied Sciences, International Islamic University, Islamabad will supervise the project. The work should be completed within one semester"
                 , normalFont));
@@ -788,7 +788,7 @@ namespace UGPC_IIUI.Controllers
             var projectFile = new ProjectFile
             {
                 FileName = fileName,
-                ProjectId =id,
+                ProjectId = id,
                 FilePath = fullPath,
                 FileType = "Project Letter"
             };

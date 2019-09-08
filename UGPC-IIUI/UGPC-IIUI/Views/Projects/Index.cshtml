@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
 @if (User.IsInRole("Student") && ViewBag.CanSubmit)
 {
@@ -23,70 +22,87 @@
     {
         <p>You haven't Submitted Project Proposal Yet.<br/><b> Submit a Proposal Now </b><br/><br/>Or <b>Ask your Group Mate </b>to submit a Proposal!</p>
     }
-    else if (User.IsInRole("Admin"))
+    else if (User.IsInRole("Admin")|| (User.IsInRole("Committee Incharger"))|| (User.IsInRole("Committee Member")))
     {
         <p>Nobody has submitted Proposal Yet.! <br/><b> Nothing to do :) </b></p>
 
     }
+    else
+    {
+        <p> No project has been assigned to you!</p>
+    }
 }
 else
 {
-    <table class="table">
-        <tr>
 
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
+    <table id="projTable" class="table table-hover table-striped">
+        <thead style="background-color: #00A65A">
+            <tr style="color: white">
 
-            <th>
-                Student 1
-            </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
 
-            <th>
-                Student 2
-            </th>
+                <th>
+                    Student 1
+                </th>
 
-            <th>
-                @Html.DisplayNameFor(m=>m.Status)
-            </th>
+                <th>
+                    Student 2
+                </th>
 
-            
-        </tr>
+                <th>
+                    @Html.DisplayNameFor(m => m.Status)
+                </th>
+                <th></th>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Group.Student1.Name)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Group.Student2.Name)
-                </td>
-                
-                <td>
-                    @Html.DisplayFor(m=>item.Status)
-                </td>
-               
-                <td>
-                    @if (!User.IsInRole("Student"))
-                    {
-                        @Html.ActionLink("Edit", "Edit", new {id = item.ProjectId})
-                    }|
-                    @Html.ActionLink("Details", "Details", new {id = item.ProjectId}) |
-                    @if (User.IsInRole("Admin"))
-                    {
-                        @Html.ActionLink("Delete", "Delete", new {id = item.ProjectId})
-                    }
-                </td>
-                
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.Student1.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.Student2.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(m => item.Status)
+                    </td>
+
+                    <td>
+                        @if (!User.IsInRole("Student"))
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-secondary btn-sm" })
+                        }
+                        @Html.ActionLink("Details", "Details", new { id = item.ProjectId }, new { @class = "btn btn-info btn-sm" })
+                        @if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-danger btn-sm" })
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
 
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#projTable").DataTable();
+        })
+    </script>
 }

@@ -36,36 +36,7 @@ namespace UGPC_IIUI.Controllers
             return View(users);
         }
 
-        // GET: Students/Details/5
-        public ActionResult Details(int? id)
-        {
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            ApplicationUser student = _context.Users.Where(u => u.StudentId == id).Include(s => s.Student).Include(d => d.Department).SingleOrDefault();
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-
-            var roles = UserManager.GetRoles(student.Id);
-
-            var viewModel = new UserViewModel
-            {
-                Name = student.Name,
-                Email = student.Email,
-                UserName = student.UserName,
-                Department = student.Department,
-                Role = roles[0],
-                Student = student.Student
-
-            };
-
-            return View(viewModel);
-        }
+        
 
         // GET: Students/Create
         public ActionResult Create()

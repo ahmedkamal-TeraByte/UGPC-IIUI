@@ -3,26 +3,38 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-
-<table class="table" >
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td class="col-md-4">
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="col-md-4">
-                @Html.ActionLink("Details", "Details", new { id=item.CommitteeId })
-            </td>
+@if (ViewBag.check == "yes")
+{
+    <table class="table table-responsive table-striped">
+        <thead style="background-color: #00A65A">
+        <tr style="color: white">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="col-md-4">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="col-md-4">
+                        @Html.ActionLink("Details", "Details", new {id = item.CommitteeId}, new {@class = "btn btn-info"})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+<p>
+You are not added into any Committee Yet. <br /> Ask <b>Admin</b> / <b>Committee Incharge</b> to add you in a committee
+</p>
+}
+
+

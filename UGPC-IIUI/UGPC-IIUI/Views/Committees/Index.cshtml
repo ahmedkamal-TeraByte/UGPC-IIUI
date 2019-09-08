@@ -4,31 +4,43 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create",null, new {@class="btn btn-primary"})
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.CommitteeId }) |
-                @Html.ActionLink("Details", "Details", new { id=item.CommitteeId }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.CommitteeId })
-            </td>
+<table id="comTable" class="table table-hover table-striped table-responsive">
+    <thead style="background-color: #00A65A">
+        <tr style="color: white">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CommitteeId }, new { @class = "btn btn-secondary btn-sm" })
+                    @Html.ActionLink("Details", "Details", new { id = item.CommitteeId }, new { @class = "btn btn-info btn-sm" })
+                     @Html.ActionLink("Delete", "Delete", new { id = item.CommitteeId }, new { @class = "btn btn-danger btn-sm " })
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function()
+        {
+            $("#comTable").DataTable();
+        });
+    </script>
+}

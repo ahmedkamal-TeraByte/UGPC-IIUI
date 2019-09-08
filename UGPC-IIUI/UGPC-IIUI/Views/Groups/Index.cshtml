@@ -4,7 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 @if (User.IsInRole("Admin"))
 {
     <p>
@@ -29,38 +28,51 @@
 }
 else
 {
-    <table class="table">
-        <tr>
+    <table id="grpTable" class="table table-hover table-striped">
+        <thead style="background-color:#00A65A ">
+            <tr style="color: white">
 
-            <th>
-                @Html.DisplayNameFor(model => model.Student1Id)
+                <th>
+                    @Html.DisplayNameFor(model => model.Student1Id)
 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Student2Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student2Id)
 
-            </th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-
-                @Html.HiddenFor(m=> item.Id)
-                <td>
-                    @Html.DisplayFor(modelItem => item.Student1.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Student2.Name)
-                </td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>
-                        @Html.ActionLink("Delete", "Delete", new {id = item.Id})
-                    </td>
-                }
+                </th>
+                <th></th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    @Html.HiddenFor(m => item.Id)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Student1.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Student2.Name)
+                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
 
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#grpTable").DataTable();
+        });
+    </script>
 }

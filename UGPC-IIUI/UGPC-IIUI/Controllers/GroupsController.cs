@@ -7,6 +7,7 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize]
     public class GroupsController : Controller
     {
         public ApplicationDbContext _context = new ApplicationDbContext();
@@ -22,6 +23,7 @@ namespace UGPC_IIUI.Controllers
 
 
         // GET: Groups/Create
+        [Authorize (Roles = "Admin, Student")]
         public ActionResult Create()
         {
 
@@ -45,6 +47,7 @@ namespace UGPC_IIUI.Controllers
 
         // POST: Groups/Create
         [HttpPost]
+        [Authorize(Roles = "Admin, Student")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GroupViewModel viewModel)
         {

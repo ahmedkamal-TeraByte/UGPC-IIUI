@@ -5,8 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-<h4>Presentation</h4>
+<h2>Edit Presentation</h2>
 <hr />
 <div class="row">
 
@@ -54,7 +53,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </div>
         </div>
@@ -68,5 +67,5 @@
 </div>
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",null, new{@class="btn btn-default"})
 </div>

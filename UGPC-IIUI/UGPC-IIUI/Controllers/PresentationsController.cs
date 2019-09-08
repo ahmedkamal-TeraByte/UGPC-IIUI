@@ -11,11 +11,13 @@ using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize]
     public class PresentationsController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
 
         // GET: Presentations
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var presentations = _context.Presentations.Include(p => p.Project).Where(p=>p.Status=="Scheduled").ToList();
@@ -25,21 +27,8 @@ namespace UGPC_IIUI.Controllers
             return View(presentations.ToList());
         }
 
-        // GET: Presentations/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Presentation presentation = _context.Presentations.Include(p=>p.Project).Single(p=>p.PresentationId==id);
-            if (presentation == null)
-            {
-                return HttpNotFound();
-            }
-            return View(presentation);
-        }
-
+       
+        [Authorize(Roles = "Admin, Committee Incharge, Committee Member")]
         // GET: Presentations/Create
         public ActionResult Create()
         {
@@ -52,6 +41,7 @@ namespace UGPC_IIUI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Committee Incharge, Committee Member")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreatePresentationsViewModel viewModel)
         {
@@ -77,6 +67,7 @@ namespace UGPC_IIUI.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Admin, Committee Incharge, Committee Member")]
         // GET: Presentations/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -105,6 +96,7 @@ namespace UGPC_IIUI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Committee Incharge, Committee Member")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "PresentationId,Date,Time,Status,ProjectId")] Presentation presentation)
         {

@@ -5,8 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-<h4>Project</h4>
+<h2>Project Details</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -102,14 +101,14 @@
 @if (!User.IsInRole("Student"))
 {
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId },new{@class="btn btn-secondary"}) 
+        @Html.ActionLink("Back to List", "Index",null, new{@class="btn btn-default"})
     </p>
 }
 else if (User.IsInRole("Student"))
 {
     <p>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index", null, new { @class ="btn btn-default"})
     </p>
 }
 

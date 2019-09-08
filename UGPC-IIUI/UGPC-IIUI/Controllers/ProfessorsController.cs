@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -18,7 +19,6 @@ namespace UGPC_IIUI.Controllers
 
 
     {
-        private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext _context = new ApplicationDbContext();
 
@@ -26,17 +26,11 @@ namespace UGPC_IIUI.Controllers
         {
 
         }
-        public ProfessorsController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ProfessorsController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
-            SignInManager = signInManager;
         }
 
-        public ApplicationSignInManager SignInManager
-        {
-            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
-            private set { _signInManager = value; }
-        }
 
         public ApplicationUserManager UserManager
         {
@@ -89,11 +83,13 @@ namespace UGPC_IIUI.Controllers
         // GET: Professors/Create
         public ActionResult Create()
         {
-            List<SelectListItem> list = new List<SelectListItem>();
-            var roles = _context.Roles.Where(u => !u.Name.Contains("Student")).ToList();
+            var list = new List<SelectListItem>
+            {
+                new SelectListItem() {Value = "Admin", Text = "Admin"},
+                new SelectListItem() {Value = "Supervisor", Text = "Supervisor"}
+            };
 
-            foreach (var role in roles)
-                list.Add(new SelectListItem() { Value = role.Name, Text = role.Name });
+
             ViewBag.Roles = list;
 
             var departments = _context.Departments.ToList();
@@ -133,16 +129,19 @@ namespace UGPC_IIUI.Controllers
                     await UserManager.AddToRoleAsync(user.Id, viewModel.Role);
                     return RedirectToAction("Index");
                 }
+                AddErrors(result);
             }
-            List<SelectListItem> list = new List<SelectListItem>();
-            var roles = _context.Roles.Where(u => !u.Name.Contains("Student")).ToList();
 
-            foreach (var role in roles)
-                list.Add(new SelectListItem() { Value = role.Name, Text = role.Name });
+            var list = new List<SelectListItem>
+            {
+                new SelectListItem() {Value = "Admin", Text = "Admin"},
+                new SelectListItem() {Value = "Supervisor", Text = "Supervisor"}
+            };
             ViewBag.Roles = list;
 
             var departments = _context.Departments.ToList();
             viewModel.Departments = departments;
+            ViewBag.Title = "Create";
 
             return View("NewProfessorForm", viewModel);
         }
@@ -160,11 +159,13 @@ namespace UGPC_IIUI.Controllers
             {
                 return HttpNotFound();
             }
-            List<SelectListItem> list = new List<SelectListItem>();
-            var roles = _context.Roles.Where(u => !u.Name.Contains("Student")).ToList();
 
-            foreach (var r in roles)
-                list.Add(new SelectListItem() { Value = r.Name, Text = r.Name });
+            var list = new List<SelectListItem>
+            {
+                new SelectListItem() {Value = "Admin", Text = "Admin"},
+                new SelectListItem() {Value = "Supervisor", Text = "Supervisor"}
+            };
+
             ViewBag.Roles = list;
 
             var role = UserManager.GetRoles(professor.Id);
@@ -201,24 +202,34 @@ namespace UGPC_IIUI.Controllers
             {
                 var userInDb = _context.Users.Single(u => u.Id == viewModel.userId);
 
-                userInDb.Id = viewModel.userId;
-                userInDb.Email = viewModel.Email;
+                
                 userInDb.Name = viewModel.Name;
-                userInDb.UserName = viewModel.UserName;
                 userInDb.DepartmentId = viewModel.DepartmentId;
 
-                _context.SaveChanges();
+               var currentRoles=UserManager.GetRoles(userInDb.Id);
+               foreach (var role in currentRoles)
+               {
+                   if (role == "Supervisor" || role == "Admin")
+                   {
+                       UserManager.RemoveFromRole(userInDb.Id, role);
+                       break;
+                   }
+               }
 
+               UserManager.AddToRole(userInDb.Id, viewModel.Role);
+
+
+                _context.SaveChanges();
 
                 return RedirectToAction("Index");
             }
 
             //            HttpNotFound("MODEL STATE IS NOT VALID");
-            List<SelectListItem> list = new List<SelectListItem>();
-            var roles = _context.Roles.Where(u => !u.Name.Contains("Student")).ToList();
-
-            foreach (var role in roles)
-                list.Add(new SelectListItem() { Value = role.Name, Text = role.Name });
+            var list = new List<SelectListItem>
+            {
+                new SelectListItem() {Value = "Admin", Text = "Admin"},
+                new SelectListItem() {Value = "Supervisor", Text = "Supervisor"}
+            };
             ViewBag.Roles = list;
 
             var departments = _context.Departments.ToList();
@@ -235,6 +246,15 @@ namespace UGPC_IIUI.Controllers
                 _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
         }
     }
 }

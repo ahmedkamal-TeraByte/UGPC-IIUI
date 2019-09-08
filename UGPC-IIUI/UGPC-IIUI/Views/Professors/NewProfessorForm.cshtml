@@ -2,15 +2,15 @@
 
 
 
-<h2>@ViewBag.Title</h2>
+<h2>@ViewBag.Title Professor</h2>
+<hr/>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Professor</h4>
-        <hr />
+       
         @Html.ValidationSummary( "", new { @class = "text-danger" })
 
         <div class="form-group">
@@ -72,11 +72,11 @@
                 @{
                     if (ViewBag.Title == "Create")
                     {
-                        <input type="submit" value="Create" class="btn btn-default"/>
+                        <input type="submit" value="Create" class="btn btn-primary"/>
                     }
                     else
                     {
-                        <input type="submit" value="Save" class="btn btn-default"/>
+                        <input type="submit" value="Save" class="btn btn-primary"/>
                     }
                 }
             </div>
@@ -86,5 +86,5 @@
 
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index",null, new {@class="btn btn-default"})
     </div>
