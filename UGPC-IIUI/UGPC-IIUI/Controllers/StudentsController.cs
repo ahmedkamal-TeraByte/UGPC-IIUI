@@ -36,7 +36,7 @@ namespace UGPC_IIUI.Controllers
             return View(users);
         }
 
-        
+
 
         // GET: Students/Create
         public ActionResult Create()
@@ -84,12 +84,22 @@ namespace UGPC_IIUI.Controllers
                     await UserManager.AddToRoleAsync(user.Id, "Student");
                     return RedirectToAction("Index");
                 }
+                AddErrors(result);
 
             }
 
             var departments = _context.Departments.ToList();
             viewModel.Departments = departments;
             return View("NewStudentForm", viewModel);
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+
+                ModelState.AddModelError("", error);
+            }
         }
 
         // GET: Students/Edit/5

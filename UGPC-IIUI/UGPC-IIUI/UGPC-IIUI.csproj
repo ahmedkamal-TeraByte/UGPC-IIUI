@@ -187,6 +187,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BatchesController.cs" />
     <Compile Include="Controllers\CommitteesController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Controllers\PresentationsController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\SectionsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="CustomValidation\PdfOnlyAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -309,7 +311,20 @@
     <Compile Include="Migrations\201909061000072_seedData.Designer.cs">
       <DependentUpon>201909061000072_seedData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909120558389_addsectionandbatchtoDB.cs" />
+    <Compile Include="Migrations\201909120558389_addsectionandbatchtoDB.Designer.cs">
+      <DependentUpon>201909120558389_addsectionandbatchtoDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909120606358_addsectionnametosection.cs" />
+    <Compile Include="Migrations\201909120606358_addsectionnametosection.Designer.cs">
+      <DependentUpon>201909120606358_addsectionnametosection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909120613110_adddisplaytobatch.cs" />
+    <Compile Include="Migrations\201909120613110_adddisplaytobatch.Designer.cs">
+      <DependentUpon>201909120613110_adddisplaytobatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Batch.cs" />
     <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Committee.cs" />
     <Compile Include="Models\CommitteeMember.cs" />
@@ -318,6 +333,7 @@
     <Compile Include="Models\Presentation.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectFile.cs" />
+    <Compile Include="Models\Section.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Department.cs" />
@@ -339,6 +355,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Images\logo.png" />
+    <Content Include="favicon.ico" />
     <Content Include="Content\bootstrap-lumen.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -451,7 +468,6 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
-    <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -460,6 +476,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <None Include="Properties\PublishProfiles\UGPC - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -606,10 +623,20 @@
     <Content Include="Views\Presentations\Index.cshtml" />
     <Content Include="Views\Markings\Edit.cshtml" />
     <Content Include="Views\Markings\Index.cshtml" />
+    <Content Include="Views\Shared\_AdminNavBar.cshtml" />
+    <Content Include="Views\Batches\Create.cshtml" />
+    <Content Include="Views\Batches\Delete.cshtml" />
+    <Content Include="Views\Batches\Details.cshtml" />
+    <Content Include="Views\Batches\Edit.cshtml" />
+    <Content Include="Views\Batches\Index.cshtml" />
+    <Content Include="Views\Sections\Create.cshtml" />
+    <Content Include="Views\Sections\Delete.cshtml" />
+    <Content Include="Views\Sections\Details.cshtml" />
+    <Content Include="Views\Sections\Edit.cshtml" />
+    <Content Include="Views\Sections\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -705,6 +732,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909061000072_seedData.resx">
       <DependentUpon>201909061000072_seedData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909120558389_addsectionandbatchtoDB.resx">
+      <DependentUpon>201909120558389_addsectionandbatchtoDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909120606358_addsectionnametosection.resx">
+      <DependentUpon>201909120606358_addsectionnametosection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909120613110_adddisplaytobatch.resx">
+      <DependentUpon>201909120613110_adddisplaytobatch.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,6 +17,9 @@ namespace UGPC_IIUI.Models
         public DbSet<Presentation> Presentations { get; set; }
         public DbSet<Marking> Markings { get; set; }
 
+        public DbSet<Batch> Batches { get; set; }
+        public DbSet<Section> Sections { get; set; }
+
 
         public DbSet<CommitteeMember> CommitteeMembers { get; set; }
 

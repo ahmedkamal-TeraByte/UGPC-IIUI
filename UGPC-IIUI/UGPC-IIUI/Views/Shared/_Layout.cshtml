@@ -26,6 +26,10 @@ else if (User.IsInRole("Supervisor"))
 {
     @Html.Partial("_ProfessorNavBar")
 }
+else if(User.IsInRole("Admin"))
+{
+    @Html.Partial("_AdminNavBar")
+}
 else
 {
     @Html.Partial("_NavBar")

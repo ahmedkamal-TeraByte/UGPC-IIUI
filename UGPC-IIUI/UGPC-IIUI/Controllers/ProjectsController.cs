@@ -178,6 +178,12 @@ namespace UGPC_IIUI.Controllers
                 };
                 _context.Presentations.Add(presentation);
 
+                var marking = new Marking
+                {
+                    ProjectId = project.ProjectId
+                };
+                _context.Markings.Add(marking);
+
 
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -292,6 +298,10 @@ namespace UGPC_IIUI.Controllers
                                 };
                                 _context.Markings.Add(marking);
                             }
+                            else
+                            {
+                                marking.PresentationMarks = viewModel.Marking;
+                            }
 
                             break;
                         }
@@ -398,9 +408,9 @@ namespace UGPC_IIUI.Controllers
             group.Student1.Student.CanSubmitProposal = true;
             group.Student2.Student.CanSubmitProposal = true;
             var changes = _context.Changes.Single(c => c.ProjectId == project.ProjectId);
-            var presentations = _context.Presentations.Where(p => p.ProjectId == project.ProjectId);
+            var presentations = _context.Presentations.Where(p => p.ProjectId == project.ProjectId).ToList();
             var marking = _context.Markings.SingleOrDefault(m => m.ProjectId == id);
-            if (presentations != null)
+            if (presentations.Count>0)
             {
                 foreach (var p in presentations)
                     _context.Presentations.Remove(p);
