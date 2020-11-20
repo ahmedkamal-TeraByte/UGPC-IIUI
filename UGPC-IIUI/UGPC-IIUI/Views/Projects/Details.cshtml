@@ -1,0 +1,114 @@
+﻿@using Microsoft.AspNet.Identity
+@model UGPC_IIUI.ViewModels.ProjectViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Project Details</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <dl class="dl-horizontal">
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt>
+                Student 1
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Student1.Name)
+            </dd>
+
+
+
+            <dt>
+                Student 2
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Student2.Name)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SubmissionDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SubmissionDate)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ProjectType)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ProjectType)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+            <dt>
+                Supervisor
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Supervisor.Name)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <dt>Attachments</dt>
+        <ul>
+            @foreach (var file in Model.ProjectFiles)
+            {
+                <li>@Html.ActionLink(file.FileName, "DownloadFile", new { id = file.ProjectFileId })</li>
+            }
+        </ul>
+        @if (User.IsInRole("Student"))
+        {
+            @Html.ActionLink("Add a file", "AddNewFile", new { id = @Model.ProjectId }, new { @class = "btn btn-primary", @id = "AddFileBtn" })
+        }
+    </div>
+    <div class="col-md-4">
+        <dt>Comments</dt>
+        <dd>@Html.TextAreaFor(m => m.Changes, new { @id="comments",@readonly = true, @rows = 10, @cols = 50 })</dd>
+    </div>
+</div>
+
+@if (!User.IsInRole("Student"))
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId },new{@class="btn btn-secondary"}) 
+        @Html.ActionLink("Back to List", "Index",null, new{@class="btn btn-default"})
+    </p>
+}
+else if (User.IsInRole("Student"))
+{
+    <p>
+        @Html.ActionLink("Back to List", "Index", null, new { @class ="btn btn-default"})
+    </p>
+}
+

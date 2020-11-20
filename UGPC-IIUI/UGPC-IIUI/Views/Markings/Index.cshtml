@@ -1,0 +1,87 @@
+﻿@model IEnumerable<UGPC_IIUI.Models.Marking>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table id="markTable" class="table table-striped table-hover">
+    <thead style="background-color: #00A65A">
+        <tr style="color: white">
+            <th>
+                @Html.DisplayNameFor(model => model.Project.Title)
+            </th>
+            <th>
+                Student 1
+            </th>
+            <th>
+                Student 2
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PresentationMarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupervisorMarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalMarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExternalMarks)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Title)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(m => item.Project.Group.Student1.Name)-
+                    @Html.DisplayFor(m => item.Project.Group.Student1.Student.RegNo)-
+                    @Html.DisplayFor(m => item.Project.Group.Student1.Student.Batch)-
+                    @Html.DisplayFor(m => item.Project.Group.Student1.Student.Section)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Project.Group.Student2.Name)-
+                    @Html.DisplayFor(m => item.Project.Group.Student2.Student.RegNo)-
+                    @Html.DisplayFor(m => item.Project.Group.Student2.Student.Batch)-
+                    @Html.DisplayFor(m => item.Project.Group.Student2.Student.Section)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PresentationMarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupervisorMarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InternalMarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExternalMarks)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.MarkingId }, new { @class = "btn btn-secondary btn-sm" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#markTable").DataTable();
+        })
+    </script>
+}

@@ -3,23 +3,52 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@ViewBag.Title - UGPC-IIUI</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
 
+   
 </head>
+
 <body>
-@Html.Partial("_NavBar")
-<div class="container body-content">
-    @RenderBody()
-    <hr/>
-    <footer>
-        <p>&copy; @DateTime.Now.Year - UGPC-IIUI</p>
-    </footer>
+<div  style="padding-top: 0px; margin-top: -50px; background-color:#015927">
+    <img src="/Images/iiui-logo.jpg" style="height:150px ; width: 800px"/>
 </div>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+@if (User.IsInRole("Student"))
+{
+    @Html.Partial("_StudentNavBar")
+}
+else if (User.IsInRole("Supervisor"))
+{
+    @Html.Partial("_ProfessorNavBar")
+}
+else if(User.IsInRole("Admin"))
+{
+    @Html.Partial("_AdminNavBar")
+}
+else
+{
+    @Html.Partial("_NavBar")
+}
+
+<div class="container body-content">
+    @RenderBody()
+    
+</div>
+
+<hr />
+<div >
+    
+</div>
+
+@Scripts.Render("~/bundles/lib")
 @RenderSection("scripts", required: false)
 </body>
+<footer>
+    <p>&copy; @DateTime.Now.Year - UGPC-IIUI</p>
+</footer>
 </html>

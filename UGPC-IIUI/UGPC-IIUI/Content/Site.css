@@ -1,4 +1,5 @@
-﻿body {
+﻿
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -21,4 +22,30 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+
+
+/* bootstrap overrides */
+
+.navbar-inverse .navbar-brand {
+    color: white;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.field-validation-error {
+    color:red
+}
+
+.input-validation-error {
+    border: 2px solid red;
 }

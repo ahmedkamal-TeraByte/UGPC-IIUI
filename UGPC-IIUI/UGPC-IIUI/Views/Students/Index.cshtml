@@ -1,57 +1,82 @@
-﻿@model IEnumerable<UGPC_IIUI.Models.Student>
+﻿@model IEnumerable<UGPC_IIUI.Models.ApplicationUser>
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null , new {@class="btn btn-primary"})
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Department.Name)
-        </th>
+<table id="studentsTable" class="table table-responsive table-hover table-striped">
+    <thead style="background-color: #00A65A">
+    <tr style="color: white">
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.RegNo)
+            @Html.DisplayNameFor(model => model.Student.RegNo)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.Batch)
+            Programme
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.Section)
+            @Html.DisplayNameFor(model => model.Department.Name)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Batch)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Section)
         </th>
         <th></th>
     </tr>
+    </thead>
+    <tbody>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RegNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Batch)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Section)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.StudentID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.StudentID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.StudentID })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.RegNo)
+                </td>
+
+                <td>
+                    BS
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Batch)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Section)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }, new { @class = "btn btn-secondary btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#studentsTable").DataTable();
+        });
+    </script>
+}

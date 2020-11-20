@@ -1,0 +1,80 @@
+﻿@using WebGrease.Css.Extensions
+@model UGPC_IIUI.ViewModels.CommitteeViewModel  
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@* <h2>Details</h2> *@
+
+<div>
+    <h2>@Model.Committee.Name</h2>
+    <hr />
+    
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+    { 
+        @Html.ActionLink("Add Members","AddNewMember", new {id=Model.Committee.CommitteeId}, new {@class="btn btn-primary "})
+    }
+    <div>
+        <br />
+    </div>
+    <table id="comdetailsTable" class=" table table-responsive table-hover table-striped">
+        <thead style="background-color: #00a65a">
+        <tr style="color: white">
+            <th><b>Professor Name</b></th>
+            <th><b>Role in Committee</b></th>
+            <th></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @{
+            if (Model.CommitteeMembers == null)
+            {
+                <p>No Items Found</p>
+            }
+            else
+            {
+
+                foreach (var p in Model.CommitteeMembers)
+                {
+                    <tr>
+                        <td>
+                            @p.Key.Name
+                        </td>
+
+                        <td>
+                            @p.Value
+                        </td>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+                        {
+                            <td>
+                                @Html.ActionLink("Edit", "EditMember", new {id = p.Key.ProfessorId},new{@class="btn btn-secondary"})
+                            
+                                @Html.ActionLink("Delete", "DeleteMember", new {id = p.Key.ProfessorId},new{@class="btn btn-danger"})
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        }
+        </tbody>
+    </table>
+
+</div>
+<p>
+    @if (User.IsInRole("Admin") || User.IsInRole("Committee Incharge"))
+    {
+        @Html.ActionLink("Edit", "Edit", new {id = Model.Committee.CommitteeId}, new{@class="btn btn-secondary"}) 
+    }
+     @Html.ActionLink("Back to List", "Index",null, new {@class="btn btn-default"})
+</p>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#comdetailsTable").DataTable();
+        });
+    </script>
+}

@@ -1,46 +1,53 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UGPC_IIUI.Models;
+using UGPC_IIUI.ViewModels;
 
 namespace UGPC_IIUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StudentsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+
+        private ApplicationDbContext _context = new ApplicationDbContext();
+        private ApplicationUserManager _userManager;
+
+
+        public ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
+        }
+
 
         // GET: Students
         public ActionResult Index()
         {
-            var students = db.Students.Include(s => s.Department);
-            return View(students.ToList());
+            IEnumerable<ApplicationUser> users = _context.Users.Where(u => u.ProfessorId == null && u.StudentId != null)
+                .Include(u => u.Student).Include(d => d.Department).ToList();
+            return View(users);
         }
 
-        // GET: Students/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Student student = db.Students.Find(id);
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-            return View(student);
-        }
+
 
         // GET: Students/Create
         public ActionResult Create()
         {
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name");
-            return View();
+            var departments = _context.Departments.ToList();
+            var viewModel = new NewUserViewModel
+            {
+                Departments = departments
+            };
+            ViewBag.Title = "Create";
+            return View("NewStudentForm", viewModel);
         }
 
         // POST: Students/Create
@@ -48,17 +55,51 @@ namespace UGPC_IIUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StudentID,Name,RegNo,Batch,Section,DepartmentID")] Student student)
+        public async Task<ActionResult> Create(NewUserViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var student = new Student
+                {
+                    Batch = viewModel.Student.Batch,
+                    RegNo = viewModel.Student.RegNo,
+                    Section = viewModel.Student.Section
+                };
+
+                var user = new ApplicationUser
+                {
+                    UserName = viewModel.UserName,
+                    Email = viewModel.Email,
+                    Name = viewModel.Name,
+                    DepartmentId = viewModel.DepartmentId,
+                    Student = student,
+                    Joined = false
+
+                };
+                var result = await UserManager.CreateAsync(user, viewModel.Password);
+                if (result.Succeeded)
+                {
+
+                    // ** use Role Name in "" for user role in place of model.role
+                    await UserManager.AddToRoleAsync(user.Id, "Student");
+                    return RedirectToAction("Index");
+                }
+                AddErrors(result);
+
             }
 
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
-            return View(student);
+            var departments = _context.Departments.ToList();
+            viewModel.Departments = departments;
+            return View("NewStudentForm", viewModel);
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+
+                ModelState.AddModelError("", error);
+            }
         }
 
         // GET: Students/Edit/5
@@ -68,13 +109,27 @@ namespace UGPC_IIUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
+            ApplicationUser student = _context.Users.Where(u => u.StudentId == id).Include(s => s.Student).Include(d => d.Department).SingleOrDefault();
+
             if (student == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
-            return View(student);
+
+            var viewModel = new UserViewModel
+            {
+                userId = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                UserName = student.UserName,
+                DepartmentId = student.DepartmentId,
+                Student = student.Student,
+                Departments = _context.Departments.ToList(),
+                Role = "Student"
+            };
+
+            ViewBag.Title = "Edit";
+            return View("StudentForm", viewModel);
         }
 
         // POST: Students/Edit/5
@@ -82,49 +137,37 @@ namespace UGPC_IIUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StudentID,Name,RegNo,Batch,Section,DepartmentID")] Student student)
+        public ActionResult Edit(UserViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(student).State = EntityState.Modified;
-                db.SaveChanges();
+                var userInDb = _context.Users.Include(s => s.Student).Single(u => u.Id == viewModel.userId);
+
+                userInDb.Email = viewModel.Email;
+                userInDb.Name = viewModel.Name;
+                userInDb.UserName = viewModel.UserName;
+                userInDb.DepartmentId = viewModel.DepartmentId;
+                userInDb.Student.RegNo = viewModel.Student.RegNo;
+                userInDb.Student.Batch = viewModel.Student.Batch;
+                userInDb.Student.Section = viewModel.Student.Section;
+
+
+                _context.SaveChanges();
+
+
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", student.DepartmentID);
-            return View(student);
+
+            viewModel.Departments = _context.Departments.ToList();
+            return View("StudentForm", viewModel);
         }
 
-        // GET: Students/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Student student = db.Students.Find(id);
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-            return View(student);
-        }
-
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Student student = db.Students.Find(id);
-            db.Students.Remove(student);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<UGPC_IIUI.Models.Presentation>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if ((User.IsInRole("Admin")) || (User.IsInRole("Committee Incharge")) || (User.IsInRole("Committee Memeber")))
+{
+    <p>
+        @Html.ActionLink("Schedule Presentations", "Create", null, new {@class = "btn btn-primary"})
+
+        <br/>
+
+        <label>@ViewBag.Count</label> Proposals are pending
+    </p>
+}
+@if (Model.Any())
+{
+    <table id="presTable" class="table table-hover table-striped">
+        <thead style="background-color: #00a65A">
+            <tr style="color: white">
+                <th>
+                    @Html.DisplayNameFor(model => model.Project.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                @if ((User.IsInRole("Admin")) || (User.IsInRole("Committee Incharge")) || (User.IsInRole("Committee Memeber")))
+
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.PresentationId }, new { @class = "btn btn-secondary btn-sm" })
+                        @*| @Html.ActionLink("Delete", "Delete", new {id = item.PresentationId}) *@
+                    </td>
+                }
+            </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+else
+{
+    <p>Woops ! No work pending! :-D</p>
+}
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#presTable").DataTable();
+        })
+    </script>
+}

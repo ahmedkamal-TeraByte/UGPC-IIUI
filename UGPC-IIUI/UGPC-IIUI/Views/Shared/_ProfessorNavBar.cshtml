@@ -1,0 +1,25 @@
+﻿<div class="navbar navbar-inverse" style="background-color: #00A65A">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("UGPC-IIUI", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                <li>@Html.ActionLink("My Committee", "MyIndex", "Committees")</li>
+                <li>@Html.ActionLink("Presentations", "Index", "Presentations")</li>
+                <li>@Html.ActionLink("My Supervision", "MyProjects", "Projects")</li>
+
+
+
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>
+

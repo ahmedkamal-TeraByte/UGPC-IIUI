@@ -1,0 +1,274 @@
+﻿@using Microsoft.AspNet.Identity
+@model UGPC_IIUI.ViewModels.ProjectViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Project Details</h2>
+
+<hr />
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal col-md-8">
+
+            @Html.HiddenFor(model => model.ProjectId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SubmissionDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.SubmissionDate, "{0:dd MMM yyyy}", new { @class = "form-control", @readonly = "true" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.StatusList, "Value", "Text"), new { @class = "form-control", @id = "StatusList" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjectType, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProjectType, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Student1.Name, "Student 1", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Student1.Name, new { @class = "form-control", @readonly = "true" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Student2.Name, "Student 2", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Student2.Name, new { @class = "form-control", @readonly = "true" })
+                </div>
+            </div>
+            
+            @* **************************************** *@
+            @* Modals *@
+            @* **************************************** *@
+            
+
+            @* Markings modal *@
+            <div class="modal fade" data-keyboard="false" data-backdrop="static"   id="marksModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="title">Modal title</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    @Html.Label("Enter Marks", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(model => model.Marking, new { @class = "form-control", @id="marksField",@onkeypress="javascript:return isNumber(event)"})
+                                    </div>
+                                </div>
+
+
+                                <div class="modal-footer form-group">
+                                    <button id ="cancelBtn" type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                    <button id="saveBtn" type="button" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+           
+                    </div>
+                </div>
+            </div>    
+
+
+            
+
+
+            @* Form submit button *@
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+
+       
+
+        <div class="col-md-4">
+
+            <div class="form-group">
+                @Html.Label("Supervisor", htmlAttributes: new {@class = "control-label "})
+                <div class="">
+                    @Html.DropDownListFor(model => model.SupervisorId, new SelectList(Model.Supervisors, "Id", "Name"),"", new {@class = "form-control",@id="supIdList"})
+                    @Html.HiddenFor(model=>model.SupervisorName,new { @id = "supName"})
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.Label("Comments", htmlAttributes: new {@class = "control-label"})
+                <div class="">
+                    @Html.TextAreaFor(model => model.Changes, new {@class = "form-control", @id = "txtArea", @rows = 13})
+                </div>
+            </div>
+            
+            @Html.ActionLink("Generate Project Letter","GenerateLetter", new {@id=@Model.ProjectId},new {@class="btn btn-primary"})
+            <label>Please Select Supervisor and Click <b>Save </b>button Before Generating Project Letter</label>
+
+        </div>
+     }
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index",null, new {@class="btn btn-default"})
+    @Html.ActionLink("Project Details", "Details",new{id=Model.ProjectId}, new {@class="btn btn-secondary"})
+</div>
+
+@section Scripts
+{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function isNumber(evt) {
+            var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+            if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+                return false;
+
+            return true;
+        }    
+        $(document).ready(function () {
+
+            //checking user and hiding details depending on user
+            {
+                var check = $('#supName').val();
+                if (check === "")
+                {
+                    $('#generateLetterDiv').hide();
+                }
+            }
+
+            //displaying status list depending on current status
+            {
+                var status = "@Model.Status";
+                switch (status) {
+
+                case "Proposal Submitted":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="In Progress"],[value="Ready For Internal Evaluation"],[value="Ready For External Evaluation"],[value="Completed"]')
+                        .hide();
+                    break;
+                case "Proposal Accepted":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Rejected"],[value="Proposal Accepted With Changes"]')
+                        .hide();
+                    break;
+                case "Proposal Accepted With Changes":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="In Progress"],[value="Ready For Internal Evaluation"],[value="Ready For External Evaluation"],[value="Completed"]')
+                        .hide();
+                    break;
+                case "In Progress":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Proposal Accepted"],[value="Proposal Accepted With Changes"],[value="Rejected"]')
+                        .hide();
+                    break;
+                case "Ready For Internal Evaluation":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Proposal Accepted"],[value="Proposal Accepted With Changes"],[value="In Progress"],[value="Rejected"]')
+                        .hide();
+                    break;
+                case "Ready For External Evaluation":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Proposal Accepted"],[value="Proposal Accepted With Changes"],[value="In Progress"],[value="Ready For Internal Evaluation"],[value="Rejected"]')
+                        .hide();
+                    break;
+                case "Completed":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Proposal Accepted"],[value="Proposal Accepted With Changes"],[value="In Progress"],[value="Ready For Internal Evaluation"],[value="Ready For External Evaluation"],[value="Rejected"]')
+                        .hide();
+                    break;
+                case "Rejected":
+                    $("#StatusList option")
+                        .filter(
+                            '[value="Proposal Submitted"],[value="Proposal Accepted"],[value="Proposal Accepted With Changes"],[value="In Progress"],[value="Ready For Internal Evaluation"],[value="Ready For External Evaluation"],[value="Completed"]')
+                        .hide();
+                    break;
+                }
+            }
+
+            //showing modals on basis of selected status
+
+            $("#StatusList").change(function () {
+
+                
+                var a = $("#StatusList option:selected").text();
+                if (a === "Proposal Accepted") {
+                    $("#marksModal").modal("show");
+                    $("#title").text("Enter Presentation Marks");
+                }
+                else if (a === "Ready For Internal Evaluation") {
+                    $("#marksModal").modal("show");
+                    $("#title").text("Enter Supervision Marks");
+                }
+
+                else if (a === "Ready For External Evaluation") {
+                    $("#marksModal").modal("show");
+                    $("#title").text("Enter Internal Marks");
+                }
+
+                else if (a === "Completed") {
+                    $("#marksModal").modal("show");
+                    $("#title").text("Enter External Marks");
+                }
+            });
+
+            //click events to prevent empty entry
+
+            $("#saveBtn").click(function ()
+            {
+               
+                var comment = $.trim($("#marksField").val());
+                if (!comment) {
+                    alert("You Must Enter Marks to Continue");
+                }
+                else {
+                   if( confirm("Are you sure to add " + comment + " marks?"))
+                    {
+                        $("#marksModal").modal("hide");
+                    }
+                }
+            });
+
+            $("#cancelBtn").click(function () {
+                var status = "@Model.Status";
+                $("#StatusList").val(status);
+            });
+
+        });
+
+    </script>
+
+
+}
