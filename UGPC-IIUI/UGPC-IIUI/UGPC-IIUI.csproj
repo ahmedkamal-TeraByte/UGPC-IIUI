@@ -323,6 +323,10 @@
     <Compile Include="Migrations\201909120613110_adddisplaytobatch.Designer.cs">
       <DependentUpon>201909120613110_adddisplaytobatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909120835213_addassignedProjectsToProfessor.cs" />
+    <Compile Include="Migrations\201909120835213_addassignedProjectsToProfessor.Designer.cs">
+      <DependentUpon>201909120835213_addassignedProjectsToProfessor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Batch.cs" />
     <Compile Include="Models\Change.cs" />
@@ -741,6 +745,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909120613110_adddisplaytobatch.resx">
       <DependentUpon>201909120613110_adddisplaytobatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909120835213_addassignedProjectsToProfessor.resx">
+      <DependentUpon>201909120835213_addassignedProjectsToProfessor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

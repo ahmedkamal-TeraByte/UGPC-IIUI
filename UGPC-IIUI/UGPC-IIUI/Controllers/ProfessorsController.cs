@@ -110,7 +110,10 @@ namespace UGPC_IIUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var professor = new Professor();
+                var professor = new Professor()
+                {
+                    AssignedProjects = 0
+                };
 
                 var user = new ApplicationUser
                 {

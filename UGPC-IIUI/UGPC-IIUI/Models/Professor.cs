@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace UGPC_IIUI.Models
+﻿namespace UGPC_IIUI.Models
 {
     public class Professor
     {
         public int ProfessorId { get; set; }
+
+        public int? AssignedProjects { get; set; }
 
     }
 }

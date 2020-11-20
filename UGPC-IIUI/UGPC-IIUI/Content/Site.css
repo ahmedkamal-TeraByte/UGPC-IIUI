@@ -41,3 +41,11 @@ textarea {
     background-color: #6c757d;
     border-color: #6c757d;
 }
+
+.field-validation-error {
+    color:red
+}
+
+.input-validation-error {
+    border: 2px solid red;
+}

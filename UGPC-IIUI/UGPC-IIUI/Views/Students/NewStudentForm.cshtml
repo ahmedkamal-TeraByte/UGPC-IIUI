@@ -41,6 +41,8 @@
             @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                <p>Password must be of minimum 6 characters and must contain a digit, a special character and a capital Letter</p>
+                @Html.ValidationMessageFor(m=>m.Password)
             </div>
         </div>
         <div class="form-group">
@@ -55,7 +57,7 @@
             @Html.LabelFor(m => m.Student.RegNo, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.Student.RegNo, new { @class = "form-control",@onkeypress="javascript:return isNumber(event)",@type="Number",@min=1,@max=9999 })
-                @Html.ValidationMessageFor(m=>m.Student.RegNo)
+                @* @Html.ValidationMessageFor(m=>m.Student.RegNo) *@
             </div>
         </div>
 

@@ -252,8 +252,15 @@ namespace UGPC_IIUI.Controllers
 
             };
             ViewBag.StatusList = Status;
+            IList<ApplicationUser> supList = new List<ApplicationUser>();
+            var sup = _context.Users.Include(u=>u.Professor).Where(u => u.StudentId == null && u.ProfessorId != null).ToList();
+            foreach (var s in sup)
+            {
+                if(s.Professor.AssignedProjects<2)
+                    supList.Add(s);
+            }
 
-            viewModel.Supervisors = _context.Users.Where(u => u.StudentId == null && u.ProfessorId != null).ToList();
+            viewModel.Supervisors = supList;
 
             //ViewBag.GroupId = new SelectList(_context.Groups, "Id", "Student1Id", project.GroupId);
             return View(viewModel);
@@ -273,7 +280,10 @@ namespace UGPC_IIUI.Controllers
                 if (project == null)
                     return HttpNotFound("Project was Deleted");
                 project.Status = viewModel.Status;
-                project.SupervisorId = viewModel.SupervisorId;
+                var supervisorId = viewModel.SupervisorId;
+                project.SupervisorId =supervisorId;
+                var prof = _context.Users.Include(u=>u.Professor).SingleOrDefault(u => u.Id == supervisorId);
+                prof.Professor.AssignedProjects++;
 
                 var marking = _context.Markings.SingleOrDefault(m => m.ProjectId == viewModel.ProjectId);
                 switch (viewModel.Status)
